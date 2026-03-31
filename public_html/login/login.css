@@ -1,12 +1,18 @@
 :root {
-  --blue-dark: #0d2d5e;
-  --blue-mid: #1a4fa0;
-  --blue-light: #3a7bd5;
-  --blue-pale: #e8f0fc;
+  --primary-dark: #1f3d2b;
+  --primary: #2f6b4f;
+  --primary-light: #5fa77d;
+
+  --accent: #c8a96a;
+
+  --bg-soft: #f6f8f7;
   --white: #ffffff;
-  --gray-soft: #f5f7fb;
-  --gray-border: #dbe3f0;
-  --gray-text: #6b7a99;
+
+  --text-dark: #1e2a24;
+  --text-light: #6b7a72;
+
+  --border: #e3e8e5;
+
   --error: #e53e3e;
 }
 
@@ -19,35 +25,32 @@
 body {
   min-height: 100vh;
   font-family: 'Tajawal', sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(58,123,213,0.12), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(13,45,94,0.10), transparent 30%),
-    var(--gray-soft);
+  background: var(--bg-soft);
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 40px 20px;
 }
 
 .page-wrapper {
+  margin: auto;
   width: 100%;
   max-width: 1000px;
-  min-height: 620px;
+  min-height: 600px;
   display: grid;
   grid-template-columns: 380px 1fr;
   background: var(--white);
   border-radius: 28px;
   overflow: hidden;
-  box-shadow: 0 24px 70px rgba(13, 45, 94, 0.16);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
 }
 
 .left-panel {
-  background: linear-gradient(160deg, var(--blue-dark), var(--blue-light));
+  background: linear-gradient(160deg, var(--primary-dark), var(--primary));
   color: white;
-  padding: 48px 36px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 40px;
 }
 
 .brand {
@@ -55,33 +58,30 @@ body {
 }
 
 .brand-logo {
-  width: 96px;
-  height: 96px;
-  margin: 0 auto 18px;
+  width: 90px;
+  height: 90px;
+  margin: auto;
+  margin-bottom: 20px;
   border-radius: 20px;
   background: rgba(255,255,255,0.2);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 10px;
 }
 
 .brand-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  width: 80%;
 }
 
 .brand-name-ar {
-  font-size: 38px;
+  font-size: 36px;
   font-weight: bold;
 }
 
 .brand-name-en {
-  font-family: 'DM Serif Display';
   letter-spacing: 3px;
-  margin-top: 6px;
+  margin-top: 5px;
 }
 
 .brand-tagline {
@@ -91,24 +91,9 @@ body {
   opacity: 0.9;
 }
 
-.divider-dots {
-  margin-top: 20px;
-}
-
-.divider-dots span {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background: rgba(255,255,255,0.5);
-  border-radius: 50%;
-  margin: 0 4px;
-}
-
 .right-panel {
-  padding: 48px;
+  padding: 40px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
 }
 
@@ -120,16 +105,16 @@ body {
 .tab-bar {
   display: flex;
   gap: 8px;
-  background: var(--blue-pale);
-  border-radius: 14px;
-  padding: 5px;
-  margin-bottom: 24px;
+  background: #eef3f0;
+  padding: 6px;
+  border-radius: 12px;
+  margin-bottom: 25px;
 }
 
 .tab-btn {
   flex: 1;
+  padding: 10px;
   border: none;
-  padding: 12px;
   border-radius: 10px;
   background: transparent;
   cursor: pointer;
@@ -138,17 +123,19 @@ body {
 
 .tab-btn.active {
   background: white;
+  color: var(--primary-dark);
 }
 
 .form-title {
-  font-size: 30px;
+  font-size: 28px;
+  color: var(--primary-dark);
   margin-bottom: 10px;
 }
 
 .form-subtitle {
-  color: var(--gray-text);
-  margin-bottom: 20px;
   font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 20px;
 }
 
 .field {
@@ -156,15 +143,21 @@ body {
 }
 
 .field label {
-  display: block;
   margin-bottom: 6px;
+  display: block;
 }
 
 .field input {
   width: 100%;
   padding: 12px;
   border-radius: 10px;
-  border: 1px solid var(--gray-border);
+  border: 1px solid var(--border);
+}
+
+.field input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(95,167,125,0.2);
 }
 
 .primary-btn {
@@ -172,7 +165,7 @@ body {
   padding: 14px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--blue-dark), var(--blue-light));
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
   color: white;
   font-weight: bold;
   margin-top: 10px;
@@ -187,7 +180,7 @@ body {
 }
 
 .form-links a {
-  color: var(--blue-mid);
+  color: var(--primary);
   text-decoration: none;
 }
 
