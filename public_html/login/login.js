@@ -1,9 +1,9 @@
-/**
- * معالجة تسجيل الدخول
- */
 function handleLogin() {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
+    const errorMsg = document.getElementById('errorMsg');
+
+    errorMsg.style.display = 'none';
 
     if (!email || !password) {
         showError('Please fill in all fields. / يرجى ملء جميع الحقول');
@@ -15,7 +15,6 @@ function handleLogin() {
         return;
     }
 
-    // محاكاة تسجيل الدخول (هنا يتم استدعاء API مستقبلاً)
     console.log('Logging in with:', email);
     window.location.href = '../dashboard/dashboard.html';
 }
@@ -30,7 +29,6 @@ function isValidEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-// السماح بالضغط على Enter
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('password').addEventListener('keydown', (e) => {
         if (e.key === 'Enter') handleLogin();

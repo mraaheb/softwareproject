@@ -1,46 +1,72 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Adud — Login</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="login.css" />
 </head>
 <body>
 
-<div class="login-container">
-    <div class="login-card">
-        <div class="login-brand">
-            <div class="logo-box">🏥</div>
-            <div>
-                <div class="brand-ar">عضد</div>
-                <div class="brand-en">ADUD</div>
+    <div class="page-wrapper">
+        <aside class="left-panel">
+            <div class="brand">
+                <div class="brand-logo">🏥</div>
+                <div class="brand-name-ar">عضد</div>
+                <div class="brand-name-en">ADUD</div>
+                <p class="brand-tagline">
+                    Medical transport platform that connects users with trusted providers
+                    <br>
+                    منصة تربط المستخدمين بمزودي النقل الطبي
+                </p>
+
+                <div class="divider-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
-        </div>
-        <h1 class="login-title">Welcome Back / أهلاً بك</h1>
-        <p class="login-subtitle">Sign in to your account / تسجيل الدخول</p>
+        </aside>
 
-        <div class="form-group">
-            <label>Email / البريد الإلكتروني</label>
-            <input type="email" id="email" placeholder="example@email.com"/>
-        </div>
-        <div class="form-group">
-            <label>Password / كلمة المرور</label>
-            <input type="password" id="password" placeholder="••••••••"/>
-        </div>
+        <main class="right-panel">
+            <div class="tab-bar">
+                <button class="tab-btn active" type="button">Login / دخول</button>
+                <button class="tab-btn" type="button" onclick="window.location.href='../index.html'">Home / الرئيسية</button>
+            </div>
 
-        <div id="errorMsg" class="error-msg" style="display:none;"></div>
+            <section class="form-section active">
+                <h1 class="form-title">Welcome Back / أهلاً بك</h1>
+                <p class="form-subtitle">
+                    Sign in to your account to continue accessing your dashboard and services.
+                    <br>
+                    سجّل دخولك للمتابعة والوصول إلى الخدمات
+                </p>
 
-        <button class="btn-login" onclick="handleLogin()">Login / دخول</button>
+                <div class="field">
+                    <label for="email">Email / البريد الإلكتروني</label>
+                    <input type="email" id="email" placeholder="example@email.com" />
+                </div>
 
-        <div class="login-footer">
-            <span>Are you a provider? / هل أنت مزود خدمة؟</span>
-            <a href="../provider-dashboard/provider-dashboard.html">Provider Login / دخول المزود</a>
-        </div>
+                <div class="field">
+                    <label for="password">Password / كلمة المرور</label>
+                    <input type="password" id="password" placeholder="••••••••" />
+                </div>
+
+                <div id="errorMsg" class="error-msg" style="display:none;"></div>
+
+                <button class="primary-btn" type="button" onclick="handleLogin()">
+                    Login / دخول
+                </button>
+
+                <div class="form-links">
+                    <a href="../index.html">← Back to home / العودة للرئيسية</a>
+                    <a href="../provider-dashboard/provider-dashboard.html">Provider Login / دخول المزود</a>
+                </div>
+            </section>
+        </main>
     </div>
-</div>
 
-<script src="login.js"></script>
+    <script src="login.js"></script>
 </body>
 </html>
