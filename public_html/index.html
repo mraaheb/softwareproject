@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Adud — Medical Transport Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar" id="navbar">
+    <div class="nav-inner">
+        <div class="nav-brand">
+            <div class="nav-logo">🏥</div>
+            <div>
+                <div class="nav-brand-ar">عضد</div>
+                <div class="nav-brand-en">ADUD</div>
+            </div>
+        </div>
+        <div class="nav-links">
+            <a href="#features">Features / المميزات</a>
+            <a href="#how">How it works / كيف يعمل</a>
+            <a href="#roles">Who we serve / لمن</a>
+        </div>
+        <div class="nav-actions">
+            <a class="btn-ghost" href="login/login.html">Login / دخول</a>
+            <a class="btn-solid" href="login/login.html">Get Started / ابدأ الآن</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+    <div class="hero-bg-circle c1"></div>
+    <div class="hero-bg-circle c2"></div>
+    <div class="hero-bg-circle c3"></div>
+
+    <div class="hero-inner">
+        <div class="hero-text">
+            <div class="hero-badge">🚐 Medical Transport • Saudi Arabia</div>
+            <h1 class="hero-title">
+                Safe Transport for<br/>
+                <span class="hero-title-highlight">Every Patient</span>
+            </h1>
+            <p class="hero-title-ar">نقل طبي آمن لكل مريض في كل مكان</p>
+            <p class="hero-desc">
+                Adud connects patients with verified medical transport providers —
+                wheelchair-accessible, oxygen-equipped, and escort-assisted rides, all in one platform.
+            </p>
+            <div class="hero-actions">
+                <a class="btn-hero-primary" href="login/login.html">Book a Ride / احجز رحلة</a>
+                <a class="btn-hero-ghost" href="provider-dashboard/provider-dashboard.html">For Providers / للمزودين</a>
+            </div>
+            <div class="hero-trust">
+                <div class="trust-item"><span class="trust-icon">✅</span> Verified Providers</div>
+                <div class="trust-item"><span class="trust-icon">♿</span> Accessible Vehicles</div>
+                <div class="trust-item"><span class="trust-icon">📍</span> Real-time Tracking</div>
+            </div>
+        </div>
+        <div class="hero-card-wrap">
+            <div class="hero-card">
+                <div class="hc-header">
+                    <div class="hc-status-dot"></div>
+                    <span>Live Trip · رحلة حية</span>
+                </div>
+                <div class="hc-route">
+                    <div class="hc-point pickup">
+                        <div class="hc-dot green"></div>
+                        <div>
+                            <div class="hc-label">Pickup / الاستلام</div>
+                            <div class="hc-addr">King Fahad District, Riyadh</div>
+                        </div>
+                    </div>
+                    <div class="hc-line"></div>
+                    <div class="hc-point dest">
+                        <div class="hc-dot blue"></div>
+                        <div>
+                            <div class="hc-label">Destination / الوجهة</div>
+                            <div class="hc-addr">King Saud Medical City</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hc-chips">
+                    <span class="hc-chip">♿ Wheelchair</span>
+                    <span class="hc-chip">🤝 Companion</span>
+                </div>
+                <div class="hc-driver">
+                    <div class="hc-avatar">ع</div>
+                    <div>
+                        <div class="hc-dname">Al Shifaa Transport</div>
+                        <div class="hc-deta">ETA: 8 min · ⭐ 4.9</div>
+                    </div>
+                    <div class="hc-pill">Assigned ✓</div>
+                </div>
+            </div>
+            <div class="hero-card-shadow"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ STATS BAR ═══ -->
+<section class="stats-bar">
+    <div class="stats-bar-inner">
+        <div class="stat-item">
+            <div class="stat-num" data-target="1200">0</div>
+            <div class="stat-lbl">Trips Completed / رحلة مكتملة</div>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat-item">
+            <div class="stat-num" data-target="48">0</div>
+            <div class="stat-lbl">Verified Providers / مزود موثق</div>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat-item">
+            <div class="stat-num" data-target="6">0</div>
+            <div class="stat-lbl">Cities / مدن</div>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat-item">
+            <div class="stat-num" data-target="98">0</div>
+            <div class="stat-lbl">Satisfaction % / رضا المرضى</div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<section class="features" id="features">
+    <div class="section-label">Platform Features / مميزات المنصة</div>
+    <h2 class="section-title">Everything a patient needs</h2>
+    <p class="section-sub">من الحجز حتى الوصول — كل شيء في مكان واحد</p>
+
+    <div class="features-grid">
+        <div class="feat-card">
+            <div class="feat-icon">🛡️</div>
+            <h3>Verified & Safe / موثوق وآمن</h3>
+            <p>All transport providers are verified, licensed, and trained to handle medical patients with care.</p>
+        </div>
+        <div class="feat-card feat-highlight">
+            <div class="feat-icon">♿</div>
+            <h3>Accessible Vehicles / مركبات مجهزة</h3>
+            <p>Request wheelchair ramps, oxygen support, stretchers, and companion seating — all in one booking.</p>
+        </div>
+        <div class="feat-card">
+            <div class="feat-icon">📍</div>
+            <h3>Live Tracking / تتبع مباشر</h3>
+            <p>Track your ride in real-time from assignment to arrival. Always know where your transport is.</p>
+        </div>
+        <div class="feat-card">
+            <div class="feat-icon">🏥</div>
+            <h3>Hospital Escorts / مرافقو المستشفى</h3>
+            <p>A registered escort meets the patient at the hospital entrance and guides them to the clinic.</p>
+        </div>
+        <div class="feat-card">
+            <div class="feat-icon">📋</div>
+            <h3>Trip History / سجل الرحلات</h3>
+            <p>Full history of all past trips with status, provider info, and detailed summaries.</p>
+        </div>
+        <div class="feat-card">
+            <div class="feat-icon">👤</div>
+            <h3>Medical Profile / الملف الطبي</h3>
+            <p>Save your mobility requirements once — they auto-fill every new request you create.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section class="how" id="how">
+    <div class="how-inner">
+        <div class="how-text">
+            <div class="section-label">How It Works / كيف يعمل</div>
+            <h2 class="section-title">3 simple steps</h2>
+            <p class="section-sub">خطوات بسيطة للحصول على رحلتك</p>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">01</div>
+                    <div class="step-body">
+                        <h4>Create a Request / أنشئ طلبًا</h4>
+                        <p>Enter your pickup, destination, date, and mobility requirements in under 2 minutes.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">02</div>
+                    <div class="step-body">
+                        <h4>Provider Accepts / يقبل المزود</h4>
+                        <p>A nearby verified provider reviews and accepts your request. You get notified instantly.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">03</div>
+                    <div class="step-body">
+                        <h4>Track & Arrive / تتبع وصل</h4>
+                        <p>Track the vehicle live until you arrive safely at your medical destination.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="how-visual">
+            <div class="phone-mock">
+                <div class="pm-bar"></div>
+                <div class="pm-screen">
+                    <div class="pm-topbar">
+                        <div class="pm-logo">🏥</div>
+                        <span>New Request</span>
+                    </div>
+                    <div class="pm-field">
+                        <div class="pm-field-label">Pickup Location</div>
+                        <div class="pm-field-val">King Fahad District...</div>
+                    </div>
+                    <div class="pm-field">
+                        <div class="pm-field-label">Destination</div>
+                        <div class="pm-field-val">King Saud Medical City</div>
+                    </div>
+                    <div class="pm-chips">
+                        <div class="pm-chip active">♿</div>
+                        <div class="pm-chip">🫁</div>
+                        <div class="pm-chip active">🤝</div>
+                    </div>
+                    <div class="pm-btn">Submit Request ✓</div>
+                    <div class="pm-notify">
+                        <div class="pm-notify-dot"></div>
+                        Provider assigned!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ ROLES ═══ -->
+<section class="roles" id="roles">
+    <div class="section-label">Who We Serve / لمن</div>
+    <h2 class="section-title">Built for patients & providers</h2>
+    <div class="roles-grid">
+        <div class="role-card patient-card">
+            <div class="role-icon">🧑‍🦽</div>
+            <h3>Patients & Guardians <span>/ المرضى والأولياء</span></h3>
+            <ul>
+                <li>✓ Book accessible medical transport</li>
+                <li>✓ Auto-fill from medical profile</li>
+                <li>✓ Request hospital escort</li>
+                <li>✓ Track rides in real-time</li>
+                <li>✓ View full trip history</li>
+            </ul>
+            <a class="role-btn" href="login/login.html">Sign Up as Patient / سجّل كمريض</a>
+        </div>
+        <div class="role-card provider-card">
+            <div class="role-icon">🚐</div>
+            <h3>Transport Providers <span>/ مزودو النقل</span></h3>
+            <ul>
+                <li>✓ Receive incoming requests</li>
+                <li>✓ Accept or reject trips</li>
+                <li>✓ Update trip status live</li>
+                <li>✓ Manage active trips</li>
+                <li>✓ View performance stats</li>
+            </ul>
+            <a class="role-btn provider-btn" href="provider-dashboard/provider-dashboard.html">Provider Login / دخول المزود</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <div class="footer-logo">🏥</div>
+            <div>
+                <div class="footer-name-ar">عضد</div>
+                <div class="footer-name-en">ADUD</div>
+            </div>
+        </div>
+        <p class="footer-copy">© 2026 Adud Medical Transport Platform. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="login/login.html">Login</a>
+            <a href="dashboard/dashboard.html">Dashboard</a>
+            <a href="provider-dashboard/provider-dashboard.html">Providers</a>
+        </div>
+    </div>
+</footer>
+
+<script src="index.js"></script>
+</body>
+</html>
