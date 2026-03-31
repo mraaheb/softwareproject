@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Adud — Track Trip</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="track-trip.css">
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <div class="logo-box">🏥</div>
+        <div>
+            <div class="ar">عضد</div>
+            <div class="en">ADUD</div>
+        </div>
+    </div>
+    <div class="nav-section">
+        <div class="nav-section-label">Main / الرئيسية</div>
+        <a class="nav-item" href="dashboard.html"><span class="icon">🏠</span><div class="nav-item-content"><span>Dashboard</span><span class="label-ar">الرئيسية</span></div></a>
+        <a class="nav-item" href="create-request.html"><span class="icon">➕</span><div class="nav-item-content"><span>New Request</span><span class="label-ar">طلب جديد</span></div></a>
+        <a class="nav-item active" href="track-trip.html"><span class="icon">📍</span><div class="nav-item-content"><span>Track Trip</span><span class="label-ar">تتبع الرحلة</span></div></a>
+        <a class="nav-item" href="trip-history.html"><span class="icon">📋</span><div class="nav-item-content"><span>Trip History</span><span class="label-ar">سجل الرحلات</span></div></a>
+    </div>
+    <div class="nav-section">
+        <div class="nav-section-label">Account / الحساب</div>
+        <a class="nav-item" href="medical-profile.html"><span class="icon">👤</span><div class="nav-item-content"><span>Medical Profile</span><span class="label-ar">الملف الطبي</span></div></a>
+    </div>
+    <div class="sidebar-footer">
+        <div class="user-card">
+            <div class="user-avatar">ل</div>
+            <div class="user-info">
+                <div class="name">Lujain Almajyul</div>
+                <div class="role">Patient / Guardian</div>
+            </div>
+        </div>
+        <button class="logout-btn">🚪 Logout / تسجيل الخروج</button>
+    </div>
+</aside>
+
+<main class="main">
+    <div class="topbar">
+        <div>
+            <h1>Track Trip / تتبع الرحلة</h1>
+            <p>Live status updates for your active transport request</p>
+        </div>
+        <button class="back-btn" onclick="location.href='dashboard.html'">← Back / رجوع</button>
+    </div>
+
+    <div class="track-grid">
+        <section>
+            <div class="info-card">
+                <div class="card-header">
+                    <h2>Request Details / تفاصيل الطلب</h2>
+                    <p>Active transport request</p>
+                </div>
+                <div class="card-body">
+                    <div class="req-id"># Request 001</div>
+
+                    <div class="detail-row">
+                        <div class="detail-icon">📍</div>
+                        <div class="detail-info">
+                            <div class="label">Pickup / الاستلام</div>
+                            <div class="value">King Fahad District, Riyadh</div>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-icon">🏥</div>
+                        <div class="detail-info">
+                            <div class="label">Destination / الوجهة</div>
+                            <div class="value">King Saud Medical City</div>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-icon">📅</div>
+                        <div class="detail-info">
+                            <div class="label">Date & Time / التاريخ والوقت</div>
+                            <div class="value">Thursday, 26 Mar 2026 — 09:00 AM</div>
+                        </div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-icon">🚐</div>
+                        <div class="detail-info">
+                            <div class="label">Service Provider / مزود الخدمة</div>
+                            <div class="value">Al Shifaa Medical Transport</div>
+                        </div>
+                    </div>
+
+                    <div class="status-current assigned">
+                        <div class="status-dot"></div>
+                        <div class="status-text">
+                            <div class="main-st">Assigned / تم التعيين</div>
+                            <div class="sub-st">Driver is on the way to pickup location</div>
+                        </div>
+                    </div>
+
+                    <div class="mobility-section">
+                        <div class="section-title">Mobility Requirements</div>
+                        <div class="mobility-tags">
+                            <span class="mob-tag">♿ Wheelchair</span>
+                            <span class="mob-tag">🤝 Companion</span>
+                        </div>
+                    </div>
+
+                    <div class="escort-info">
+                        <h4>🏥 Hospital Escort Assigned / تم تعيين مرافق</h4>
+                        <div class="escort-row"><span>Name:</span> Sara Al-Mutairi</div>
+                        <div class="escort-row"><span>Meeting:</span> Main Entrance / Reception</div>
+                        <div class="escort-row"><span>Phone:</span> 0509876543</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="timeline-card">
+            <div class="card-header">
+                <h2>Trip Timeline / الجدول الزمني للرحلة</h2>
+                <p>All status updates with timestamps</p>
+            </div>
+            <div class="timeline-body">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="tl-dot done">✓</div>
+                        <div class="tl-content">
+                            <div class="tl-title">Requested / تم الطلب</div>
+                            <div class="tl-sub">Transport request submitted successfully</div>
+                            <div class="tl-time">🕐 26 Mar 2026 — 07:30 AM</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="tl-dot active">●</div>
+                        <div class="tl-content">
+                            <div class="tl-title active-text">Assigned / تم التعيين ← Current</div>
+                            <div class="tl-sub">Request accepted by Al Shifaa Medical Transport</div>
+                            <div class="tl-time">🕐 26 Mar 2026 — 08:10 AM</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="tl-dot pending"></div>
+                        <div class="tl-content">
+                            <div class="tl-title pending-text">Picked Up / تم الاستلام</div>
+                            <div class="tl-sub">Waiting for driver to pick up patient</div>
+                            <div class="tl-time pending-time">⏳ Pending</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="tl-dot pending"></div>
+                        <div class="tl-content">
+                            <div class="tl-title pending-text">Arrived / تم الوصول</div>
+                            <div class="tl-sub">Patient arrives at destination</div>
+                            <div class="tl-time pending-time">⏳ Pending</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="tl-dot pending"></div>
+                        <div class="tl-content">
+                            <div class="tl-title pending-text">Completed / مكتمل</div>
+                            <div class="tl-sub">Trip successfully completed</div>
+                            <div class="tl-time pending-time">⏳ Pending</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+</body>
+</html>
