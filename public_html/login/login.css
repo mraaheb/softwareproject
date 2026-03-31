@@ -136,6 +136,7 @@ body {
 .right-panel {
   padding: 48px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
@@ -151,7 +152,9 @@ body {
   background: var(--blue-pale);
   border-radius: 14px;
   padding: 5px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
+  width: 100%;
+  max-width: 420px;
 }
 
 .tab-btn {

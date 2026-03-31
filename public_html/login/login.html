@@ -4,69 +4,96 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Adud — Login</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="login.css" />
 </head>
+
 <body>
 
-    <div class="page-wrapper">
-        <aside class="left-panel">
-            <div class="brand">
-                <div class="brand-logo">🏥</div>
-                <div class="brand-name-ar">عضد</div>
-                <div class="brand-name-en">ADUD</div>
-                <p class="brand-tagline">
-                    Medical transport platform that connects users with trusted providers
-                    <br>
-                    منصة تربط المستخدمين بمزودي النقل الطبي
-                </p>
+<div class="page-wrapper">
 
-                <div class="divider-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
+    <!-- LEFT SIDE -->
+    <aside class="left-panel">
+        <div class="brand">
+            <div class="brand-logo">🏥</div>
+            <div class="brand-name-ar">عضد</div>
+            <div class="brand-name-en">ADUD</div>
+
+            <p class="brand-tagline">
+                Medical transport platform that connects users with trusted providers
+                <br>
+                منصة تربط المستخدمين بمزودي النقل الطبي
+            </p>
+
+            <div class="divider-dots">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
-        </aside>
+        </div>
+    </aside>
 
-        <main class="right-panel">
+    <!-- RIGHT SIDE -->
+    <main class="right-panel">
+
+        <section class="form-section">
+
+            <!-- FIXED POSITION -->
             <div class="tab-bar">
-                <button class="tab-btn active" type="button">Login / دخول</button>
-                <button class="tab-btn" type="button" onclick="window.location.href='../index.html'">Home / الرئيسية</button>
-            </div>
-
-            <section class="form-section active">
-                <h1 class="form-title">Welcome Back / أهلاً بك</h1>
-                <p class="form-subtitle">
-                    Sign in to your account to continue accessing your dashboard and services.
-                    <br>
-                    سجّل دخولك للمتابعة والوصول إلى الخدمات
-                </p>
-
-                <div class="field">
-                    <label for="email">Email / البريد الإلكتروني</label>
-                    <input type="email" id="email" placeholder="example@email.com" />
-                </div>
-
-                <div class="field">
-                    <label for="password">Password / كلمة المرور</label>
-                    <input type="password" id="password" placeholder="••••••••" />
-                </div>
-
-                <div id="errorMsg" class="error-msg" style="display:none;"></div>
-
-                <button class="primary-btn" type="button" onclick="handleLogin()">
+                <button class="tab-btn active" type="button">
                     Login / دخول
                 </button>
 
-                <div class="form-links">
-                    <a href="../index.html">← Back to home / العودة للرئيسية</a>
-                    <a href="../provider-dashboard/provider-dashboard.html">Provider Login / دخول المزود</a>
-                </div>
-            </section>
-        </main>
-    </div>
+                <button class="tab-btn" type="button"
+                        onclick="window.location.href='../index.html'">
+                    Home / الرئيسية
+                </button>
+            </div>
 
-    <script src="login.js"></script>
+            <h1 class="form-title">Welcome Back / أهلاً بك</h1>
+
+            <p class="form-subtitle">
+                Sign in to your account to continue accessing your dashboard and services.
+                <br>
+                سجّل دخولك للمتابعة والوصول إلى الخدمات
+            </p>
+
+            <!-- EMAIL -->
+            <div class="field">
+                <label for="email">Email / البريد الإلكتروني</label>
+                <input type="email" id="email" placeholder="example@email.com" />
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="field">
+                <label for="password">Password / كلمة المرور</label>
+                <input type="password" id="password" placeholder="••••••••" />
+            </div>
+
+            <!-- ERROR -->
+            <div id="errorMsg" class="error-msg" style="display:none;"></div>
+
+            <!-- BUTTON -->
+            <button class="primary-btn" type="button" onclick="handleLogin()">
+                Login / دخول
+            </button>
+
+            <!-- LINKS -->
+            <div class="form-links">
+                <a href="../index.html">← Back to home / العودة للرئيسية</a>
+                <a href="../provider-dashboard/provider-dashboard.html">
+                    Provider Login / دخول المزود
+                </a>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="login.js"></script>
+
 </body>
 </html>
