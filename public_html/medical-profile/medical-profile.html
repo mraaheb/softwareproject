@@ -4,30 +4,82 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Adud — Medical Profile</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="medical-profile..css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="medical-profile.css">
 </head>
 <body>
 
 <aside class="sidebar">
     <div class="sidebar-brand">
-        <div class="logo-box">🏥</div>
-        <div><div class="ar">عضد</div><div class="en">ADUD</div></div>
+        <div class="logo-box">
+            <img src="../../images/logo.png" alt="ADUD Logo">
+        </div>
+        <div class="brand-text">
+            <div class="ar">عضد</div>
+            <div class="en">ADUD</div>
+        </div>
     </div>
-     <div class="nav-section">
+
+    <div class="nav-section">
         <div class="nav-section-label">Main / الرئيسية</div>
-        <a class="nav-item" href="../dashboard/dashboard.html"><span class="icon">🏠</span><div class="nav-item-content"><span>Dashboard</span><span class="label-ar">الرئيسية</span></div></a>
-        <a class="nav-item active" href="../createReq/createReq.html"><span class="icon">➕</span><div class="nav-item-content"><span>New Request</span><span class="label-ar">طلب جديد</span></div></a>
-        <a class="nav-item" href="../track-trip/track-trip.html"><span class="icon">📍</span><div class="nav-item-content"><span>Track Trip</span><span class="label-ar">تتبع الرحلة</span></div></a>
-        <a class="nav-item" href="../trip-history/trip-history.html"><span class="icon">📋</span><div class="nav-item-content"><span>Trip History</span><span class="label-ar">سجل الرحلات</span></div></a>
+
+        <a class="nav-item" href="../dashboard/dashboard.html">
+            <span class="icon">🏠</span>
+            <div class="nav-item-content">
+                <span>Dashboard</span>
+                <span class="label-ar">الرئيسية</span>
+            </div>
+        </a>
+
+        <a class="nav-item" href="../createReq/createReq.html">
+            <span class="icon">➕</span>
+            <div class="nav-item-content">
+                <span>New Request</span>
+                <span class="label-ar">طلب جديد</span>
+            </div>
+        </a>
+
+        <a class="nav-item" href="../track-trip/track-trip.html">
+            <span class="icon">📍</span>
+            <div class="nav-item-content">
+                <span>Track Trip</span>
+                <span class="label-ar">تتبع الرحلة</span>
+            </div>
+        </a>
+
+        <a class="nav-item" href="../trip-history/trip-history.html">
+            <span class="icon">📋</span>
+            <div class="nav-item-content">
+                <span>Trip History</span>
+                <span class="label-ar">سجل الرحلات</span>
+            </div>
+        </a>
     </div>
+
     <div class="nav-section">
         <div class="nav-section-label">Account / الحساب</div>
-        <a class="nav-item active" href="medical-profile.html"><span class="icon">👤</span><div class="nav-item-content"><span>Medical Profile</span><span class="label-ar">الملف الطبي</span></div></a>
+
+        <a class="nav-item active" href="medical-profile.html">
+            <span class="icon">👤</span>
+            <div class="nav-item-content">
+                <span>Medical Profile</span>
+                <span class="label-ar">الملف الطبي</span>
+            </div>
+        </a>
     </div>
+
     <div class="sidebar-footer">
-        <div class="user-card"><div class="user-avatar">ل</div><div class="user-info"><div class="name">Lujain Almajyul</div><div class="role">Patient / Guardian</div></div></div>
-        <button class="logout-btn">🚪 Logout / تسجيل الخروج</button>
+        <div class="user-card">
+            <div class="user-avatar">ل</div>
+            <div class="user-info">
+                <div class="name">Lujain Almajyul</div>
+                <div class="role">Patient / Guardian</div>
+            </div>
+        </div>
+
+        <button class="logout-btn" onclick="location.href='../login/login.html'">
+            🚪 Logout / تسجيل الخروج
+        </button>
     </div>
 </aside>
 
@@ -45,12 +97,37 @@
             <div class="profile-name">Lujain Almajyul</div>
             <div class="profile-role">Patient / مريضة</div>
             <div class="profile-badge">✓ Profile Complete</div>
+
             <div class="info-rows">
-                <div class="info-row"><span class="info-icon">📧</span><span class="info-label">Email</span><span class="info-val">lujain@email.com</span></div>
-                <div class="info-row"><span class="info-icon">📱</span><span class="info-label">Phone</span><span class="info-val">0501234567</span></div>
-                <div class="info-row"><span class="info-icon">♿</span><span class="info-label">Wheelchair</span><span class="info-val highlight-green">✓ Required</span></div>
-                <div class="info-row"><span class="info-icon">🤝</span><span class="info-label">Companion</span><span class="info-val highlight-green">✓ Required</span></div>
-                <div class="info-row"><span class="info-icon">🫁</span><span class="info-label">Oxygen</span><span class="info-val highlight-gray">✗ Not needed</span></div>
+                <div class="info-row">
+                    <span class="info-icon">📧</span>
+                    <span class="info-label">Email</span>
+                    <span class="info-val">lujain@email.com</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-icon">📱</span>
+                    <span class="info-label">Phone</span>
+                    <span class="info-val">0501234567</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-icon">♿</span>
+                    <span class="info-label">Wheelchair</span>
+                    <span class="info-val highlight-green">✓ Required</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-icon">🤝</span>
+                    <span class="info-label">Companion</span>
+                    <span class="info-val highlight-green">✓ Required</span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-icon">🫁</span>
+                    <span class="info-label">Oxygen</span>
+                    <span class="info-val highlight-gray">✗ Not needed</span>
+                </div>
             </div>
         </div>
 
@@ -65,14 +142,31 @@
 
             <div class="card-body">
                 <div class="section-label">Personal Information / المعلومات الشخصية</div>
+
                 <div class="form-grid2">
-                    <div class="field"><label>Full Name / الاسم</label><input type="text" value="Lujain Almajyul" id="fname" disabled/></div>
-                    <div class="field"><label>Phone / الهاتف</label><input type="tel" value="0501234567" id="phone" disabled/></div>
-                    <div class="field"><label>Email / البريد</label><input type="email" value="lujain@email.com" id="email" disabled/></div>
-                    <div class="field"><label>Date of Birth / تاريخ الميلاد</label><input type="date" value="1999-05-14" id="dob" disabled/></div>
+                    <div class="field">
+                        <label>Full Name / الاسم</label>
+                        <input type="text" value="Lujain Almajyul" id="fname" disabled/>
+                    </div>
+
+                    <div class="field">
+                        <label>Phone / الهاتف</label>
+                        <input type="tel" value="0501234567" id="phone" disabled/>
+                    </div>
+
+                    <div class="field">
+                        <label>Email / البريد</label>
+                        <input type="email" value="lujain@email.com" id="email" disabled/>
+                    </div>
+
+                    <div class="field">
+                        <label>Date of Birth / تاريخ الميلاد</label>
+                        <input type="date" value="1999-05-14" id="dob" disabled/>
+                    </div>
                 </div>
 
                 <div class="section-label">Mobility Requirements / متطلبات التنقل</div>
+
                 <div class="mobility-grid">
                     <div class="mobility-option checked disabled" id="wheelchairOpt" onclick="toggleMobility(this)">
                         <div class="mobility-icon">♿</div>
@@ -80,12 +174,14 @@
                         <div class="mobility-label-ar">كرسي متحرك</div>
                         <div class="mobility-check">✓</div>
                     </div>
+
                     <div class="mobility-option disabled" id="oxygenOpt" onclick="toggleMobility(this)">
                         <div class="mobility-icon">🫁</div>
                         <div class="mobility-label">Oxygen Support</div>
                         <div class="mobility-label-ar">دعم أكسجين</div>
                         <div class="mobility-check"></div>
                     </div>
+
                     <div class="mobility-option checked disabled" id="companionOpt" onclick="toggleMobility(this)">
                         <div class="mobility-icon">🤝</div>
                         <div class="mobility-label">Companion Seat</div>
@@ -95,6 +191,7 @@
                 </div>
 
                 <div class="section-label">Additional Notes / ملاحظات إضافية</div>
+
                 <div class="field">
                     <textarea id="notes" disabled>Patient requires wheelchair-accessible vehicle. Companion seat needed for caregiver.</textarea>
                 </div>
@@ -110,6 +207,6 @@
 
 <div class="success-toast" id="toast">✅ Profile saved successfully! / تم حفظ الملف بنجاح</div>
 
-<script src="medical-profile..js"></script>
+<script src="medical-profile.js"></script>
 </body>
 </html>
