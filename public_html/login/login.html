@@ -16,7 +16,11 @@
     <!-- LEFT SIDE -->
     <aside class="left-panel">
         <div class="brand">
-            <div class="brand-logo">🏥</div>
+
+            <div class="brand-logo">
+                <img src="../../images/logo.png" alt="ADUD Logo">
+            </div>
+
             <div class="brand-name-ar">عضد</div>
             <div class="brand-name-en">ADUD</div>
 
@@ -39,14 +43,10 @@
 
         <section class="form-section">
 
-            <!-- FIXED POSITION -->
+            <!-- TABS -->
             <div class="tab-bar">
-                <button class="tab-btn active" type="button">
-                    Login / دخول
-                </button>
-
-                <button class="tab-btn" type="button"
-                        onclick="window.location.href='../index.html'">
+                <button class="tab-btn active">Login / دخول</button>
+                <button class="tab-btn" onclick="window.location.href='../index.html'">
                     Home / الرئيسية
                 </button>
             </div>
@@ -61,13 +61,13 @@
 
             <!-- EMAIL -->
             <div class="field">
-                <label for="email">Email / البريد الإلكتروني</label>
+                <label>Email / البريد الإلكتروني</label>
                 <input type="email" id="email" placeholder="example@email.com" />
             </div>
 
             <!-- PASSWORD -->
             <div class="field">
-                <label for="password">Password / كلمة المرور</label>
+                <label>Password / كلمة المرور</label>
                 <input type="password" id="password" placeholder="••••••••" />
             </div>
 
@@ -75,7 +75,7 @@
             <div id="errorMsg" class="error-msg" style="display:none;"></div>
 
             <!-- BUTTON -->
-            <button class="primary-btn" type="button" onclick="handleLogin()">
+            <button class="primary-btn" onclick="handleLogin()">
                 Login / دخول
             </button>
 
