@@ -7,113 +7,148 @@ function handleLogout() {
   window.location.href = '../login/login.html';
 }
 
-function allRequests() {
+function getRequests() {
   return AdudStore.getRequests();
 }
 
-function saveRequests(v) {
-  AdudStore.saveRequests(v);
+function saveRequests(requests) {
+  AdudStore.saveRequests(requests);
 }
 
 function isActive(status) {
   return ['Requested', 'Assigned', 'Picked Up', 'Arrived'].includes(status);
 }
 
-function pillClass(status) {
-  if (status === 'Completed') return 'pill-completed';
-  if (status === 'Cancelled') return 'pill-cancelled';
-  if (status === 'Requested') return 'pill-pending';
-  return 'pill-assigned';
+function getStatusClass(status) {
+  switch (status) {
+    case 'Completed':
+      return 'pill-completed';
+    case 'Cancelled':
+      return 'pill-cancelled';
+    case 'Requested':
+      return 'pill-pending';
+    case 'Assigned':
+    case 'Picked Up':
+    case 'Arrived':
+      return 'pill-assigned';
+    default:
+      return 'pill-pending';
+  }
 }
 
 function renderStats() {
-  const reqs = allRequests();
+  const requests = getRequests();
 
-  document.getElementById('activeCount').textContent =
-    reqs.filter(r => isActive(r.status)).length;
+  const active = requests.filter(r => isActive(r.status)).length;
+  const completed = requests.filter(r => r.status === 'Completed').length;
+  const pending = requests.filter(r => r.status === 'Requested').length;
+  const escorts = requests.filter(r => r.escort || r.guardianId).length;
 
-  document.getElementById('completedCount').textContent =
-    reqs.filter(r => r.status === 'Completed').length;
+  const activeCount = document.getElementById('activeCount');
+  const completedCount = document.getElementById('completedCount');
+  const pendingCount = document.getElementById('pendingCount');
+  const escortCount = document.getElementById('escortCount');
 
-  document.getElementById('pendingCount').textContent =
-    reqs.filter(r => r.status === 'Requested').length;
-
-  document.getElementById('escortCount').textContent =
-    reqs.filter(r => r.escort || r.guardianId).length;
+  if (activeCount) activeCount.textContent = active;
+  if (completedCount) completedCount.textContent = completed;
+  if (pendingCount) pendingCount.textContent = pending;
+  if (escortCount) escortCount.textContent = escorts;
 }
 
-function renderTable() {
+function renderRequestsTable() {
   const tbody = document.getElementById('requests-body');
-  const reqs = allRequests().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const requests = getRequests()
+    .slice()
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  tbody.innerHTML =
-    reqs
-      .map(r => {
-        const dt = `${r.date} — ${r.time}`;
-        const actions = [];
+  if (!tbody) return;
 
-        actions.push(
-          `<button class="act-btn act-view" onclick="viewRequest('${r.id}')">View</button>`
-        );
+  if (!requests.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center;">No requests yet / لا توجد طلبات</td>
+      </tr>
+    `;
+    return;
+  }
 
-        if (r.status === 'Requested') {
-          actions.push(
-            `<button class="act-btn act-view" onclick="editRequest('${r.id}')">Edit</button>`
-          );
-          actions.push(
-            `<button class="act-btn act-view" onclick="cancelRequest('${r.id}')">Cancel</button>`
-          );
-        }
+  tbody.innerHTML = requests.map(r => {
+    let actions = `
+      <button class="act-btn act-view" onclick="viewRequest('${r.id}')">View</button>
+    `;
 
-        return `
-          <tr>
-            <td><strong>#${r.id}</strong></td>
-            <td>${r.pickup}</td>
-            <td>${r.dest}</td>
-            <td>${dt}</td>
-            <td>
-              <span class="status-pill ${pillClass(r.status)}">
-                <span class="dot"></span>${r.status}
-              </span>
-            </td>
-            <td><div class="action-btns">${actions.join('')}</div></td>
-          </tr>
-        `;
-      })
-      .join('') || '<tr><td colspan="6">No requests yet</td></tr>';
-}
+    if (r.status === 'Requested') {
+      actions += `
+        <button class="act-btn act-edit" onclick="editRequest('${r.id}')">Edit</button>
+        <button class="act-btn act-delete" onclick="cancelRequest('${r.id}')">Cancel</button>
+      `;
+    }
 
-function editRequest(id) {
-  window.location.href = `../createReq/createReq.html?id=${encodeURIComponent(id)}`;
+    return `
+      <tr>
+        <td><strong>#${r.id}</strong></td>
+        <td>${r.pickup}</td>
+        <td>${r.dest}</td>
+        <td>${r.date} — ${r.time}</td>
+        <td>
+          <span class="status-pill ${getStatusClass(r.status)}">
+            <span class="dot"></span>${r.status}
+          </span>
+        </td>
+        <td>
+          <div class="action-btns">${actions}</div>
+        </td>
+      </tr>
+    `;
+  }).join('');
 }
 
 function viewRequest(id) {
   window.location.href = `../track-trip/track-trip.html?id=${encodeURIComponent(id)}`;
 }
 
+function editRequest(id) {
+  window.location.href = `../createReq/createReq.html?id=${encodeURIComponent(id)}`;
+}
+
 function cancelRequest(id) {
-  if (!confirm('Cancel this request? / إلغاء الطلب؟')) return;
+  const requests = getRequests();
+  const request = requests.find(r => r.id === id);
 
-  const reqs = allRequests();
-  const req = reqs.find(r => r.id === id);
+  if (!request) return;
 
-  if (!req || req.status !== 'Requested') return;
+  if (request.status !== 'Requested') {
+    alert('You can only cancel before provider acceptance / يمكن الإلغاء فقط قبل قبول مزود الخدمة');
+    return;
+  }
 
-  req.status = 'Cancelled';
-  req.cancelledAt = AdudStore.nowIso();
-  req.updatedAt = req.cancelledAt;
-  req.timeline.push({
+  const ok = confirm('Cancel this request? / هل تريد إلغاء هذا الطلب؟');
+  if (!ok) return;
+
+  const now = AdudStore.nowIso();
+
+  request.status = 'Cancelled';
+  request.cancelledAt = now;
+  request.updatedAt = now;
+
+  if (!request.timeline) {
+    request.timeline = [];
+  }
+
+  request.timeline.push({
     status: 'Cancelled',
-    time: req.cancelledAt,
-    note: 'Cancelled by patient'
+    time: now,
+    note: 'Cancelled by patient before provider acceptance'
   });
 
-  saveRequests(reqs);
+  saveRequests(requests);
   renderStats();
-  renderTable();
+  renderRequestsTable();
+
+  alert('Request cancelled successfully / تم إلغاء الطلب بنجاح');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   renderStats();
-  renderTable();
+  renderRequestsTable();
 });

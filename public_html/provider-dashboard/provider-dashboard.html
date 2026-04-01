@@ -59,7 +59,7 @@
             </div>
         </div>
 
-        <button class="logout-btn" onclick="location.href='../login/login.html'">
+        <button class="logout-btn" onclick="handleLogout()">
             🚪 Logout / تسجيل الخروج
         </button>
     </div>
@@ -78,7 +78,7 @@
             <div class="stat-top">
                 <div class="stat-icon green">📥</div>
             </div>
-            <div class="stat-value" id="count-new">2</div>
+            <div class="stat-value" id="count-new">0</div>
             <div class="stat-label">New Requests</div>
             <div class="stat-label-ar">طلبات جديدة</div>
         </div>
@@ -87,7 +87,7 @@
             <div class="stat-top">
                 <div class="stat-icon gold">🚐</div>
             </div>
-            <div class="stat-value" id="count-active">2</div>
+            <div class="stat-value" id="count-active">0</div>
             <div class="stat-label">Active Trips</div>
             <div class="stat-label-ar">رحلات نشطة</div>
         </div>
@@ -141,23 +141,27 @@
 
         <div class="status-options">
             <div class="status-option" onclick="selectStatus(this,'Assigned')">
-                <input type="radio" name="st"/>
+                <input type="radio" name="st">
                 <label>🟡 Assigned / تم التعيين</label>
             </div>
+
             <div class="status-option" onclick="selectStatus(this,'Picked Up')">
-                <input type="radio" name="st"/>
+                <input type="radio" name="st">
                 <label>🔵 Picked Up / تم الاستلام</label>
             </div>
+
             <div class="status-option" onclick="selectStatus(this,'Arrived')">
-                <input type="radio" name="st"/>
+                <input type="radio" name="st">
                 <label>🟢 Arrived / تم الوصول</label>
             </div>
+
             <div class="status-option" onclick="selectStatus(this,'Completed')">
-                <input type="radio" name="st"/>
+                <input type="radio" name="st">
                 <label>✅ Completed / مكتمل</label>
             </div>
+
             <div class="status-option" onclick="selectStatus(this,'Cancelled')">
-                <input type="radio" name="st"/>
+                <input type="radio" name="st">
                 <label>❌ Cancelled / ملغي</label>
             </div>
         </div>

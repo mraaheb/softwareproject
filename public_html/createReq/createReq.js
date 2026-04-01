@@ -10,7 +10,10 @@ function toggleMobility(el) {
 
 function toggleEscort(el) {
   el.classList.toggle('active');
-  qs('escortCheck').textContent = el.classList.contains('active') ? '✓' : '';
+  const check = qs('escortCheck');
+  if (check) {
+    check.textContent = el.classList.contains('active') ? '✓' : '';
+  }
 }
 
 function applyProfile() {
@@ -20,19 +23,33 @@ function applyProfile() {
     ['wheelchair', 'wheelchairOpt'],
     ['oxygen', 'oxygenOpt'],
     ['companion', 'companionOpt']
-  ].forEach(([k, id]) => {
+  ].forEach(([key, id]) => {
     const el = qs(id);
-    const want = !!p[k];
-    if (el.classList.contains('checked') !== want) toggleMobility(el);
+    if (!el) return;
+
+    const shouldBeChecked = !!p[key];
+    const isChecked = el.classList.contains('checked');
+
+    if (shouldBeChecked !== isChecked) {
+      toggleMobility(el);
+    }
   });
 
-  qs('notes').value = p.notes || '';
-  qs('autofillText').innerHTML =
-    '<strong>✓ Profile applied!</strong> Your medical profile was applied successfully.';
-  qs('applyBtn').style.display = 'none';
+  if (qs('notes')) {
+    qs('notes').value = p.notes || '';
+  }
+
+  if (qs('autofillText')) {
+    qs('autofillText').innerHTML =
+      '<strong>✓ Profile applied!</strong> Your medical profile has been applied successfully.';
+  }
+
+  if (qs('applyBtn')) {
+    qs('applyBtn').style.display = 'none';
+  }
 }
 
-function formData() {
+function getFormData() {
   return {
     pickup: qs('pickup').value.trim(),
     dest: qs('destination').value.trim(),
@@ -43,70 +60,107 @@ function formData() {
       ['oxygenOpt', 'Oxygen'],
       ['companionOpt', 'Companion']
     ]
-      .filter(([id]) => qs(id).classList.contains('checked'))
+      .filter(([id]) => qs(id) && qs(id).classList.contains('checked'))
       .map(([, name]) => name),
-    notes: qs('notes').value.trim(),
-    escort: qs('escortBanner').classList.contains('active')
+    notes: qs('notes') ? qs('notes').value.trim() : '',
+    escort: qs('escortBanner') ? qs('escortBanner').classList.contains('active') : false
   };
 }
 
-function fillForm(r) {
-  qs('pickup').value = r.pickup;
-  qs('destination').value = r.dest;
-  qs('apptDate').value = r.date;
-  qs('apptTime').value = r.time;
-  qs('notes').value = r.notes || '';
+function fillForm(request) {
+  qs('pickup').value = request.pickup || '';
+  qs('destination').value = request.dest || '';
+  qs('apptDate').value = request.date || '';
+  qs('apptTime').value = request.time || '';
+  if (qs('notes')) qs('notes').value = request.notes || '';
 
   [
     ['Wheelchair', 'wheelchairOpt'],
     ['Oxygen', 'oxygenOpt'],
     ['Companion', 'companionOpt']
   ].forEach(([name, id]) => {
-    const should = (r.mobility || []).includes(name);
     const el = qs(id);
-    if (el.classList.contains('checked') !== should) toggleMobility(el);
+    if (!el) return;
+
+    const shouldBeChecked = (request.mobility || []).includes(name);
+    const isChecked = el.classList.contains('checked');
+
+    if (shouldBeChecked !== isChecked) {
+      toggleMobility(el);
+    }
   });
 
-  if (!!r.escort !== qs('escortBanner').classList.contains('active')) {
-    toggleEscort(qs('escortBanner'));
+  const escortBanner = qs('escortBanner');
+  if (escortBanner) {
+    const shouldEscort = !!request.escort;
+    const isEscort = escortBanner.classList.contains('active');
+
+    if (shouldEscort !== isEscort) {
+      toggleEscort(escortBanner);
+    }
   }
 }
 
 function submitRequest() {
-  const data = formData();
+  const data = getFormData();
 
   if (!data.pickup || !data.dest || !data.date || !data.time) {
-    return alert('Please fill in all required fields. / يرجى ملء جميع الحقول المطلوبة');
+    alert('Please fill in all required fields / الرجاء تعبئة جميع الحقول المطلوبة');
+    return;
   }
 
-  const reqs = AdudStore.getRequests();
-  const id = new URLSearchParams(location.search).get('id');
+  const requests = AdudStore.getRequests();
+  const urlParams = new URLSearchParams(window.location.search);
+  const editId = urlParams.get('id');
 
-  if (id) {
-    const r = reqs.find(x => x.id === id);
-    if (!r || r.status !== 'Requested') {
-      return alert('Only requested trips can be edited before provider acceptance.');
+  if (editId) {
+    const request = requests.find(r => r.id === editId);
+
+    if (!request) {
+      alert('Request not found / الطلب غير موجود');
+      return;
     }
 
-    Object.assign(r, data, { updatedAt: AdudStore.nowIso() });
-    r.timeline.push({
+    if (request.status !== 'Requested') {
+      alert('You can only edit the request before provider acceptance / يمكن تعديل الطلب فقط قبل قبول مزود الخدمة');
+      return;
+    }
+
+    request.pickup = data.pickup;
+    request.dest = data.dest;
+    request.date = data.date;
+    request.time = data.time;
+    request.mobility = data.mobility;
+    request.notes = data.notes;
+    request.escort = data.escort;
+    request.updatedAt = AdudStore.nowIso();
+
+    if (!request.timeline) request.timeline = [];
+    request.timeline.push({
       status: 'Updated',
-      time: r.updatedAt,
+      time: request.updatedAt,
       note: 'Request details edited by patient'
     });
+
   } else {
     const now = AdudStore.nowIso();
 
-    reqs.push({
+    requests.push({
       id: AdudStore.nextId('REQ'),
-      ...data,
+      pickup: data.pickup,
+      dest: data.dest,
+      date: data.date,
+      time: data.time,
+      mobility: data.mobility,
+      notes: data.notes,
+      escort: data.escort,
+      guardianId: null,
+      providerId: null,
+      providerName: '—',
       status: 'Requested',
       createdAt: now,
       updatedAt: now,
       cancelledAt: null,
-      guardianId: null,
-      providerId: null,
-      providerName: '—',
       timeline: [
         {
           status: 'Requested',
@@ -117,18 +171,37 @@ function submitRequest() {
     });
   }
 
-  AdudStore.saveRequests(reqs);
-  qs('successModal').classList.add('show');
+  AdudStore.saveRequests(requests);
+
+  const modal = qs('successModal');
+  if (modal) {
+    modal.classList.add('show');
+  } else {
+    alert('Saved successfully / تم الحفظ بنجاح');
+    window.location.href = '../dashboard/dashboard.html';
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const id = new URLSearchParams(location.search).get('id');
-  if (id) {
-    const r = AdudStore.getRequests().find(x => x.id === id);
-    if (r) fillForm(r);
-    const topbarTitle = document.querySelector('.topbar h1');
-    if (topbarTitle) {
-      topbarTitle.textContent = 'Edit Transport Request / تعديل الطلب';
+  const urlParams = new URLSearchParams(window.location.search);
+  const editId = urlParams.get('id');
+
+  if (editId) {
+    const requests = AdudStore.getRequests();
+    const request = requests.find(r => r.id === editId);
+
+    if (request) {
+      fillForm(request);
+
+      const pageTitle = document.querySelector('.topbar h1');
+      if (pageTitle) {
+        pageTitle.textContent = 'Edit Transport Request / تعديل الطلب';
+      }
+
+      const submitBtn = document.querySelector('.btn-submit');
+      if (submitBtn) {
+        submitBtn.textContent = 'Save Changes / حفظ التعديلات';
+      }
     }
   }
 });

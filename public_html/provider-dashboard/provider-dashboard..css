@@ -7,13 +7,11 @@
 
   --white: #ffffff;
   --bg-soft: #f6f8f7;
-  --bg-card: #ffffff;
-
   --text-dark: #1f2c25;
   --text-mid: #5f6f66;
   --text-soft: #8a988f;
-
   --border: #e3e8e5;
+
   --success: #2f855a;
   --success-soft: #e8f7ee;
   --danger: #c53030;
@@ -367,6 +365,7 @@ body {
   display: flex;
   gap: 10px;
   margin-top: 15px;
+  flex-wrap: wrap;
 }
 
 .btn-accept {
@@ -377,7 +376,6 @@ body {
   border-radius: 10px;
   font-weight: 700;
   cursor: pointer;
-  flex: 1;
   font-family: inherit;
 }
 
@@ -437,6 +435,24 @@ body {
   background: var(--blue-mid);
 }
 
+.pill-completed {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.pill-completed .dot {
+  background: var(--success);
+}
+
+.pill-cancelled {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.pill-cancelled .dot {
+  background: var(--danger);
+}
+
 .guardian-form {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr auto;
@@ -456,6 +472,19 @@ body {
   border-radius: 12px;
   padding: 14px;
   margin-bottom: 10px;
+  background: #fcfdfc;
+}
+
+.guardian-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.guardian-meta {
+  font-size: 12px;
+  color: var(--text-mid);
+  margin-top: 4px;
 }
 
 .modal-overlay {
@@ -599,15 +628,18 @@ body {
     padding: 24px 18px;
   }
 
-  .guardian-form,
+  .guardian-form {
+    grid-template-columns: 1fr;
+  }
+
   .req-actions,
   .modal-actions {
-    grid-template-columns: 1fr;
     flex-direction: column;
   }
 
   .btn-accept,
   .btn-reject,
+  .btn-update,
   .btn-modal-cancel,
   .btn-modal-save {
     width: 100%;

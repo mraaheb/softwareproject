@@ -1,6 +1,6 @@
-const requests_container = document.getElementById('requests-container');
-const active_trips_container = document.getElementById('active-trips-container');
-const guardians_container = document.getElementById('guardians-container');
+const requestsContainer = document.getElementById('requests-container');
+const activeTripsContainer = document.getElementById('active-trips-container');
+const guardiansContainer = document.getElementById('guardians-container');
 const guardianName = document.getElementById('guardianName');
 const guardianPhone = document.getElementById('guardianPhone');
 const guardianNotes = document.getElementById('guardianNotes');
@@ -10,28 +10,33 @@ const toast = document.getElementById('toast');
 let currentEditingId = null;
 let tempSelectedStatus = '';
 
-function requests() {
+function handleLogout() {
+  AdudStore.logout();
+  window.location.href = '../login/login.html';
+}
+
+function getRequests() {
   return AdudStore.getRequests();
 }
 
-function saveRequests(v) {
-  AdudStore.saveRequests(v);
+function saveRequests(requests) {
+  AdudStore.saveRequests(requests);
 }
 
-function guardians() {
+function getGuardians() {
   return AdudStore.getGuardians();
 }
 
-function saveGuardians(v) {
-  AdudStore.saveGuardians(v);
+function saveGuardians(guardians) {
+  AdudStore.saveGuardians(guardians);
 }
 
 function incomingRequests() {
-  return requests().filter(r => r.status === 'Requested');
+  return getRequests().filter(r => r.status === 'Requested');
 }
 
 function activeTrips() {
-  return requests().filter(r =>
+  return getRequests().filter(r =>
     ['Assigned', 'Picked Up', 'Arrived'].includes(r.status)
   );
 }
@@ -41,228 +46,282 @@ function renderStats() {
   document.getElementById('count-active').textContent = activeTrips().length;
 }
 
-function renderIncoming() {
-  requests_container.innerHTML =
-    incomingRequests()
-      .map(r => {
-        const guardianOptions = guardians()
-          .map(g => `<option value="${g.id}">${g.name}</option>`)
-          .join('');
+function renderIncomingRequests() {
+  const guardians = getGuardians();
 
-        return `
-          <div class="req-card new-req">
-            <div class="req-title">#${r.id} • ${r.pickup} → ${r.dest}</div>
-            <div class="req-meta">
-              Date: ${r.date} — ${r.time}<br>
-              Mobility: ${(r.mobility || []).join(', ') || 'None'}<br>
-              Notes: ${r.notes || '—'}<br>
-              Escort: ${r.escort ? 'Yes' : 'No'}
-            </div>
+  requestsContainer.innerHTML =
+    incomingRequests().map(r => {
+      const guardianOptions = guardians.map(g => `
+        <option value="${g.id}" ${r.guardianId === g.id ? 'selected' : ''}>
+          ${g.name}
+        </option>
+      `).join('');
 
-            <div style="margin-top:10px;">
-              <label style="font-size:12px;font-weight:700;">Assign Guardian / تعيين مرافق</label>
-              <select onchange="assignGuardian('${r.id}', this.value)" style="width:100%;margin-top:6px;padding:10px;border:1.5px solid #e3e8e5;border-radius:10px;">
-                <option value="">None</option>
-                ${guardianOptions}
-              </select>
-            </div>
-
-            <div class="req-actions">
-              <button class="btn-reject" onclick="handleReject('${r.id}')">✗ Reject</button>
-              <button class="btn-accept" onclick="handleAccept('${r.id}')">✓ Accept</button>
-            </div>
+      return `
+        <div class="req-card new-req">
+          <div class="req-title">#${r.id} • ${r.pickup} → ${r.dest}</div>
+          <div class="req-meta">
+            Date: ${r.date} — ${r.time}<br>
+            Mobility: ${(r.mobility || []).join(', ') || 'None'}<br>
+            Notes: ${r.notes || '—'}<br>
+            Escort needed: ${r.escort ? 'Yes' : 'No'}
           </div>
-        `;
-      })
-      .join('') || '<p>No incoming requests.</p>';
+
+          <div style="margin-top: 12px;">
+            <label style="font-size:12px;font-weight:700;">Assign Guardian / تعيين مرافق</label>
+            <select
+              onchange="assignGuardian('${r.id}', this.value)"
+              style="width:100%;margin-top:6px;padding:10px;border:1.5px solid #e3e8e5;border-radius:10px;font-family:inherit;"
+            >
+              <option value="">None</option>
+              ${guardianOptions}
+            </select>
+          </div>
+
+          <div class="req-actions">
+            <button class="btn-reject" onclick="rejectRequest('${r.id}')">✗ Reject</button>
+            <button class="btn-accept" onclick="acceptRequest('${r.id}')">✓ Accept</button>
+          </div>
+        </div>
+      `;
+    }).join('') || '<p>No incoming requests / لا توجد طلبات واردة</p>';
 }
 
 function renderActiveTrips() {
-  active_trips_container.innerHTML =
-    activeTrips()
-      .map(trip => `
+  activeTripsContainer.innerHTML =
+    activeTrips().map(trip => {
+      let pillClass = 'pill-assigned';
+      if (trip.status === 'Picked Up' || trip.status === 'Arrived') {
+        pillClass = 'pill-pickedup';
+      }
+
+      const guardian = getGuardians().find(g => g.id === trip.guardianId);
+
+      return `
         <div class="trip-row">
-          <div class="trip-info">
-            <div class="trip-route-sm">${trip.pickup} → ${trip.dest}</div>
-            <div class="trip-meta-sm">
-              #${trip.id} • ${trip.date} — ${trip.time}
-              ${
-                trip.guardianId
-                  ? `• Guardian: ${guardians().find(g => g.id === trip.guardianId)?.name || ''}`
-                  : ''
-              }
-            </div>
+          <div class="trip-route-sm">${trip.pickup} → ${trip.dest}</div>
+          <div class="trip-meta-sm">
+            #${trip.id} • ${trip.date} — ${trip.time}<br>
+            Provider: ${trip.providerName || '—'}<br>
+            Guardian: ${guardian ? guardian.name : 'None'}
           </div>
 
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span class="status-pill ${trip.status === 'Picked Up' ? 'pill-pickedup' : 'pill-assigned'}">
+          <div class="req-actions">
+            <span class="status-pill ${pillClass}">
               <span class="dot"></span>${trip.status}
             </span>
-            <button class="btn-update" onclick="openUpdateModal('${trip.id}')">Update Status →</button>
+            <button class="btn-update" onclick="openUpdateModal('${trip.id}')">
+              Update Status
+            </button>
           </div>
         </div>
-      `)
-      .join('') || '<p>No active trips.</p>';
+      `;
+    }).join('') || '<p>No active trips / لا توجد رحلات نشطة</p>';
 }
 
 function renderGuardians() {
-  guardians_container.innerHTML =
-    guardians()
-      .map(g => `
-        <div class="guardian-list-item">
-          <div>
-            <strong>${g.name}</strong>
-            <div style="font-size:12px;color:#6B7A99">${g.phone} • ${g.notes || ''}</div>
-          </div>
-        </div>
-      `)
-      .join('') || '<p>No guardians added yet.</p>';
+  guardiansContainer.innerHTML =
+    getGuardians().map(g => `
+      <div class="guardian-list-item">
+        <div class="guardian-title">${g.name}</div>
+        <div class="guardian-meta">${g.phone} • ${g.notes || '—'}</div>
+      </div>
+    `).join('') || '<p>No guardians yet / لا يوجد مرافقون بعد</p>';
 }
 
 function renderAll() {
   renderStats();
-  renderIncoming();
+  renderIncomingRequests();
   renderActiveTrips();
   renderGuardians();
 }
 
 function addGuardian() {
-  if (!guardianName.value.trim() || !guardianPhone.value.trim()) return;
+  const name = guardianName.value.trim();
+  const phone = guardianPhone.value.trim();
+  const notes = guardianNotes.value.trim();
 
-  const list = guardians();
-  list.push({
+  if (!name || !phone) {
+    alert('Please enter guardian name and phone / الرجاء إدخال اسم المرافق ورقم الجوال');
+    return;
+  }
+
+  const guardians = getGuardians();
+  guardians.push({
     id: AdudStore.nextId('G'),
-    name: guardianName.value.trim(),
-    phone: guardianPhone.value.trim(),
-    notes: guardianNotes.value.trim()
+    name,
+    phone,
+    notes
   });
 
-  saveGuardians(list);
+  saveGuardians(guardians);
 
   guardianName.value = '';
   guardianPhone.value = '';
   guardianNotes.value = '';
 
-  renderAll();
+  renderGuardians();
+  showToast('Guardian added successfully / تم إضافة المرافق بنجاح', 'success');
 }
 
-function assignGuardian(id, guardianId) {
-  const list = requests();
-  const r = list.find(x => x.id === id);
-  if (!r) return;
+function assignGuardian(requestId, guardianId) {
+  const requests = getRequests();
+  const request = requests.find(r => r.id === requestId);
 
-  r.guardianId = guardianId || null;
-  r.updatedAt = AdudStore.nowIso();
+  if (!request) return;
 
-  saveRequests(list);
+  request.guardianId = guardianId || null;
+  request.updatedAt = AdudStore.nowIso();
+
+  saveRequests(requests);
+  showToast('Guardian assigned / تم تعيين المرافق', 'success');
 }
 
-function handleAccept(id) {
-  const list = requests();
-  const r = list.find(x => x.id === id);
-  if (!r) return;
+function acceptRequest(id) {
+  const requests = getRequests();
+  const request = requests.find(r => r.id === id);
 
-  const user = AdudStore.getCurrentUser() || {
+  if (!request) return;
+
+  const currentUser = AdudStore.getCurrentUser() || {
     id: 'PROV001',
     name: 'Al Shifaa Transport'
   };
 
-  r.status = 'Assigned';
-  r.providerId = user.id;
-  r.providerName = user.name;
-  r.updatedAt = AdudStore.nowIso();
-  r.timeline.push({
+  request.status = 'Assigned';
+  request.providerId = currentUser.id;
+  request.providerName = currentUser.name;
+  request.updatedAt = AdudStore.nowIso();
+
+  if (!request.timeline) {
+    request.timeline = [];
+  }
+
+  request.timeline.push({
     status: 'Assigned',
-    time: r.updatedAt,
+    time: request.updatedAt,
     note: 'Request accepted by provider'
   });
 
-  saveRequests(list);
+  saveRequests(requests);
   renderAll();
-  showToast(`✅ Request #${id} accepted and assigned!`, 'success');
+  showToast(`Request #${id} accepted / تم قبول الطلب`, 'success');
 }
 
-function handleReject(id) {
-  const list = requests();
-  const r = list.find(x => x.id === id);
-  if (!r) return;
+function rejectRequest(id) {
+  const requests = getRequests();
+  const request = requests.find(r => r.id === id);
 
-  r.status = 'Cancelled';
-  r.cancelledAt = AdudStore.nowIso();
-  r.updatedAt = r.cancelledAt;
-  r.timeline.push({
+  if (!request) return;
+
+  const now = AdudStore.nowIso();
+  request.status = 'Cancelled';
+  request.cancelledAt = now;
+  request.updatedAt = now;
+
+  if (!request.timeline) {
+    request.timeline = [];
+  }
+
+  request.timeline.push({
     status: 'Cancelled',
-    time: r.cancelledAt,
+    time: now,
     note: 'Rejected by service provider'
   });
 
-  saveRequests(list);
+  saveRequests(requests);
   renderAll();
-  showToast(`Request #${id} rejected.`, 'error');
+  showToast(`Request #${id} rejected / تم رفض الطلب`, 'error');
 }
 
 function openUpdateModal(id) {
   currentEditingId = id;
   tempSelectedStatus = '';
 
-  document.querySelectorAll('.status-option').forEach(o => {
-    o.classList.remove('selected');
-    o.querySelector('input').checked = false;
+  document.querySelectorAll('.status-option').forEach(option => {
+    option.classList.remove('selected');
+    const input = option.querySelector('input');
+    if (input) input.checked = false;
   });
 
   updateModal.classList.add('show');
 }
 
-function selectStatus(el, val) {
-  document.querySelectorAll('.status-option').forEach(o => o.classList.remove('selected'));
+function selectStatus(el, value) {
+  document.querySelectorAll('.status-option').forEach(option => {
+    option.classList.remove('selected');
+    const input = option.querySelector('input');
+    if (input) input.checked = false;
+  });
+
   el.classList.add('selected');
-  el.querySelector('input').checked = true;
-  tempSelectedStatus = val;
+  const radio = el.querySelector('input');
+  if (radio) radio.checked = true;
+
+  tempSelectedStatus = value;
 }
 
 function saveStatus() {
-  if (!tempSelectedStatus) return alert('Please select a status');
+  if (!tempSelectedStatus) {
+    alert('Please select a status / الرجاء اختيار الحالة');
+    return;
+  }
 
-  const list = requests();
-  const r = list.find(t => t.id === currentEditingId);
-  if (!r) return;
+  const requests = getRequests();
+  const request = requests.find(r => r.id === currentEditingId);
 
-  const order = ['Assigned', 'Picked Up', 'Arrived', 'Completed', 'Cancelled'];
+  if (!request) return;
+
+  const allowedOrder = ['Assigned', 'Picked Up', 'Arrived', 'Completed', 'Cancelled'];
+  const currentIndex = allowedOrder.indexOf(request.status);
+  const nextIndex = allowedOrder.indexOf(tempSelectedStatus);
 
   if (
-    order.indexOf(tempSelectedStatus) < order.indexOf(r.status) &&
-    tempSelectedStatus !== 'Cancelled'
+    tempSelectedStatus !== 'Cancelled' &&
+    nextIndex !== -1 &&
+    currentIndex !== -1 &&
+    nextIndex < currentIndex
   ) {
-    return alert('Status must follow the workflow order.');
+    alert('Status must follow the workflow order / يجب اتباع تسلسل الحالات');
+    return;
   }
 
-  r.status = tempSelectedStatus;
-  r.updatedAt = AdudStore.nowIso();
+  request.status = tempSelectedStatus;
+  request.updatedAt = AdudStore.nowIso();
 
   if (tempSelectedStatus === 'Cancelled') {
-    r.cancelledAt = r.updatedAt;
+    request.cancelledAt = request.updatedAt;
   }
 
-  r.timeline.push({
+  if (!request.timeline) {
+    request.timeline = [];
+  }
+
+  request.timeline.push({
     status: tempSelectedStatus,
-    time: r.updatedAt,
+    time: request.updatedAt,
     note: `Status changed to ${tempSelectedStatus}`
   });
 
-  saveRequests(list);
+  saveRequests(requests);
   closeUpdateModal();
   renderAll();
-  showToast(`✅ Status updated to "${tempSelectedStatus}"`, 'success');
+  showToast(`Status updated to ${tempSelectedStatus}`, 'success');
 }
 
 function closeUpdateModal() {
   updateModal.classList.remove('show');
 }
 
-function showToast(msg, type) {
-  toast.textContent = msg;
+function showToast(message, type) {
+  toast.textContent = message;
   toast.className = `toast ${type} show`;
-  setTimeout(() => toast.classList.remove('show'), 3000);
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3000);
 }
 
-document.addEventListener('DOMContentLoaded', renderAll);
+document.addEventListener('DOMContentLoaded', () => {
+  renderAll();
+});
