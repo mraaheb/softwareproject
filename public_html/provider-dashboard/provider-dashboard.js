@@ -1,142 +1,268 @@
-// بيانات تجريبية أولية
-let incomingRequests = [
-    { id: '008', pickup: 'Al Malaz District', dest: 'King Fahad Medical City', date: '28 Mar 2026', time: '10:00 AM', meta: ['♿ Wheelchair', '🤝 Companion'] },
-    { id: '009', pickup: 'Al Rawdah District', dest: 'National Guard Hospital', date: '29 Mar 2026', time: '08:30 AM', meta: ['🫁 Oxygen'] }
-];
-
-let activeTrips = [
-    { id: '001', route: 'King Fahad District → King Saud Medical City', meta: '26 Mar 2026 — 09:00 AM', status: 'Assigned', statusClass: 'pill-assigned' },
-    { id: '010', route: 'Al Nakheel District → Riyadh National Hospital', meta: '26 Mar 2026 — 02:00 PM', status: 'Picked Up', statusClass: 'pill-pickedup' }
-];
+const requests_container = document.getElementById('requests-container');
+const active_trips_container = document.getElementById('active-trips-container');
+const guardians_container = document.getElementById('guardians-container');
+const guardianName = document.getElementById('guardianName');
+const guardianPhone = document.getElementById('guardianPhone');
+const guardianNotes = document.getElementById('guardianNotes');
+const updateModal = document.getElementById('updateModal');
+const toast = document.getElementById('toast');
 
 let currentEditingId = null;
 let tempSelectedStatus = '';
 
-// --- الدوال الأساسية ---
-
-function renderAll() {
-    renderRequests();
-    renderActiveTrips();
-    updateStats();
+function requests() {
+  return AdudStore.getRequests();
 }
 
-function renderRequests() {
-    const container = document.getElementById('requests-container');
-    container.innerHTML = incomingRequests.map(req => `
-        <div class="req-card new-req" id="req-${req.id}">
-            <div class="req-top">
-                <span class="req-id-badge">#${req.id} — New</span>
-                <span class="req-datetime">📅 ${req.date} — ${req.time}</span>
-            </div>
-            <div class="req-route">
-                <span class="req-point">📍 ${req.pickup}</span>
-                <span class="req-arrow">→</span>
-                <span class="req-point">🏥 ${req.dest}</span>
-            </div>
+function saveRequests(v) {
+  AdudStore.saveRequests(v);
+}
+
+function guardians() {
+  return AdudStore.getGuardians();
+}
+
+function saveGuardians(v) {
+  AdudStore.saveGuardians(v);
+}
+
+function incomingRequests() {
+  return requests().filter(r => r.status === 'Requested');
+}
+
+function activeTrips() {
+  return requests().filter(r =>
+    ['Assigned', 'Picked Up', 'Arrived'].includes(r.status)
+  );
+}
+
+function renderStats() {
+  document.getElementById('count-new').textContent = incomingRequests().length;
+  document.getElementById('count-active').textContent = activeTrips().length;
+}
+
+function renderIncoming() {
+  requests_container.innerHTML =
+    incomingRequests()
+      .map(r => {
+        const guardianOptions = guardians()
+          .map(g => `<option value="${g.id}">${g.name}</option>`)
+          .join('');
+
+        return `
+          <div class="req-card new-req">
+            <div class="req-title">#${r.id} • ${r.pickup} → ${r.dest}</div>
             <div class="req-meta">
-                ${req.meta.map(m => `<span class="meta-tag">${m}</span>`).join('')}
+              Date: ${r.date} — ${r.time}<br>
+              Mobility: ${(r.mobility || []).join(', ') || 'None'}<br>
+              Notes: ${r.notes || '—'}<br>
+              Escort: ${r.escort ? 'Yes' : 'No'}
             </div>
+
+            <div style="margin-top:10px;">
+              <label style="font-size:12px;font-weight:700;">Assign Guardian / تعيين مرافق</label>
+              <select onchange="assignGuardian('${r.id}', this.value)" style="width:100%;margin-top:6px;padding:10px;border:1.5px solid #e3e8e5;border-radius:10px;">
+                <option value="">None</option>
+                ${guardianOptions}
+              </select>
+            </div>
+
             <div class="req-actions">
-                <button class="btn-reject" onclick="handleReject('${req.id}')">✗ Reject</button>
-                <button class="btn-accept" onclick="handleAccept('${req.id}')">✓ Accept</button>
+              <button class="btn-reject" onclick="handleReject('${r.id}')">✗ Reject</button>
+              <button class="btn-accept" onclick="handleAccept('${r.id}')">✓ Accept</button>
             </div>
-        </div>
-    `).join('');
+          </div>
+        `;
+      })
+      .join('') || '<p>No incoming requests.</p>';
 }
 
 function renderActiveTrips() {
-    const container = document.getElementById('active-trips-container');
-    container.innerHTML = activeTrips.map(trip => `
+  active_trips_container.innerHTML =
+    activeTrips()
+      .map(trip => `
         <div class="trip-row">
-            <div class="trip-info">
-                <div class="trip-route-sm">${trip.route}</div>
-                <div class="trip-meta-sm">#${trip.id} • ${trip.meta}</div>
+          <div class="trip-info">
+            <div class="trip-route-sm">${trip.pickup} → ${trip.dest}</div>
+            <div class="trip-meta-sm">
+              #${trip.id} • ${trip.date} — ${trip.time}
+              ${
+                trip.guardianId
+                  ? `• Guardian: ${guardians().find(g => g.id === trip.guardianId)?.name || ''}`
+                  : ''
+              }
             </div>
-            <div style="display:flex;align-items:center;gap:10px;">
-                <span class="status-pill ${trip.statusClass}"><span class="dot"></span>${trip.status}</span>
-                <button class="btn-update" onclick="openUpdateModal('${trip.id}')">Update Status →</button>
-            </div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="status-pill ${trip.status === 'Picked Up' ? 'pill-pickedup' : 'pill-assigned'}">
+              <span class="dot"></span>${trip.status}
+            </span>
+            <button class="btn-update" onclick="openUpdateModal('${trip.id}')">Update Status →</button>
+          </div>
         </div>
-    `).join('');
+      `)
+      .join('') || '<p>No active trips.</p>';
 }
 
-function updateStats() {
-    document.getElementById('count-new').textContent = incomingRequests.length;
-    document.getElementById('count-active').textContent = activeTrips.length;
+function renderGuardians() {
+  guardians_container.innerHTML =
+    guardians()
+      .map(g => `
+        <div class="guardian-list-item">
+          <div>
+            <strong>${g.name}</strong>
+            <div style="font-size:12px;color:#6B7A99">${g.phone} • ${g.notes || ''}</div>
+          </div>
+        </div>
+      `)
+      .join('') || '<p>No guardians added yet.</p>';
 }
 
-// --- معالجة الأفعال ---
+function renderAll() {
+  renderStats();
+  renderIncoming();
+  renderActiveTrips();
+  renderGuardians();
+}
+
+function addGuardian() {
+  if (!guardianName.value.trim() || !guardianPhone.value.trim()) return;
+
+  const list = guardians();
+  list.push({
+    id: AdudStore.nextId('G'),
+    name: guardianName.value.trim(),
+    phone: guardianPhone.value.trim(),
+    notes: guardianNotes.value.trim()
+  });
+
+  saveGuardians(list);
+
+  guardianName.value = '';
+  guardianPhone.value = '';
+  guardianNotes.value = '';
+
+  renderAll();
+}
+
+function assignGuardian(id, guardianId) {
+  const list = requests();
+  const r = list.find(x => x.id === id);
+  if (!r) return;
+
+  r.guardianId = guardianId || null;
+  r.updatedAt = AdudStore.nowIso();
+
+  saveRequests(list);
+}
 
 function handleAccept(id) {
-    const reqIndex = incomingRequests.findIndex(r => r.id === id);
-    const req = incomingRequests[reqIndex];
-    
-    // نقل للرحلات النشطة
-    activeTrips.push({
-        id: req.id,
-        route: `📍 ${req.pickup} → 🏥 ${req.dest}`,
-        meta: `${req.date} — ${req.time}`,
-        status: 'Assigned',
-        statusClass: 'pill-assigned'
-    });
-    
-    incomingRequests.splice(reqIndex, 1);
-    renderAll();
-    showToast(`✅ Request #${id} accepted and assigned!`, 'success');
+  const list = requests();
+  const r = list.find(x => x.id === id);
+  if (!r) return;
+
+  const user = AdudStore.getCurrentUser() || {
+    id: 'PROV001',
+    name: 'Al Shifaa Transport'
+  };
+
+  r.status = 'Assigned';
+  r.providerId = user.id;
+  r.providerName = user.name;
+  r.updatedAt = AdudStore.nowIso();
+  r.timeline.push({
+    status: 'Assigned',
+    time: r.updatedAt,
+    note: 'Request accepted by provider'
+  });
+
+  saveRequests(list);
+  renderAll();
+  showToast(`✅ Request #${id} accepted and assigned!`, 'success');
 }
 
 function handleReject(id) {
-    incomingRequests = incomingRequests.filter(r => r.id !== id);
-    renderAll();
-    showToast(`Request #${id} has been rejected.`, 'error');
+  const list = requests();
+  const r = list.find(x => x.id === id);
+  if (!r) return;
+
+  r.status = 'Cancelled';
+  r.cancelledAt = AdudStore.nowIso();
+  r.updatedAt = r.cancelledAt;
+  r.timeline.push({
+    status: 'Cancelled',
+    time: r.cancelledAt,
+    note: 'Rejected by service provider'
+  });
+
+  saveRequests(list);
+  renderAll();
+  showToast(`Request #${id} rejected.`, 'error');
 }
 
-// --- نظام الـ Modal ---
-
 function openUpdateModal(id) {
-    currentEditingId = id;
-    tempSelectedStatus = '';
-    document.querySelectorAll('.status-option').forEach(o => {
-        o.classList.remove('selected');
-        o.querySelector('input').checked = false;
-    });
-    document.getElementById('updateModal').classList.add('show');
+  currentEditingId = id;
+  tempSelectedStatus = '';
+
+  document.querySelectorAll('.status-option').forEach(o => {
+    o.classList.remove('selected');
+    o.querySelector('input').checked = false;
+  });
+
+  updateModal.classList.add('show');
 }
 
 function selectStatus(el, val) {
-    document.querySelectorAll('.status-option').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-    el.querySelector('input').checked = true;
-    tempSelectedStatus = val;
+  document.querySelectorAll('.status-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('input').checked = true;
+  tempSelectedStatus = val;
 }
 
 function saveStatus() {
-    if (!tempSelectedStatus) return alert('Please select a status');
-    
-    const trip = activeTrips.find(t => t.id === currentEditingId);
-    if (trip) {
-        trip.status = tempSelectedStatus;
-        // تغيير لون الـ Pill بناءً على الحالة
-        if (tempSelectedStatus === 'Completed') trip.statusClass = 'pill-completed'; 
-        else if (tempSelectedStatus === 'Picked Up') trip.statusClass = 'pill-pickedup';
-        else trip.statusClass = 'pill-assigned';
-    }
-    
-    closeUpdateModal();
-    renderActiveTrips();
-    showToast(`✅ Status updated to "${tempSelectedStatus}"`, 'success');
+  if (!tempSelectedStatus) return alert('Please select a status');
+
+  const list = requests();
+  const r = list.find(t => t.id === currentEditingId);
+  if (!r) return;
+
+  const order = ['Assigned', 'Picked Up', 'Arrived', 'Completed', 'Cancelled'];
+
+  if (
+    order.indexOf(tempSelectedStatus) < order.indexOf(r.status) &&
+    tempSelectedStatus !== 'Cancelled'
+  ) {
+    return alert('Status must follow the workflow order.');
+  }
+
+  r.status = tempSelectedStatus;
+  r.updatedAt = AdudStore.nowIso();
+
+  if (tempSelectedStatus === 'Cancelled') {
+    r.cancelledAt = r.updatedAt;
+  }
+
+  r.timeline.push({
+    status: tempSelectedStatus,
+    time: r.updatedAt,
+    note: `Status changed to ${tempSelectedStatus}`
+  });
+
+  saveRequests(list);
+  closeUpdateModal();
+  renderAll();
+  showToast(`✅ Status updated to "${tempSelectedStatus}"`, 'success');
 }
 
 function closeUpdateModal() {
-    document.getElementById('updateModal').classList.remove('show');
+  updateModal.classList.remove('show');
 }
 
 function showToast(msg, type) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = `toast ${type} show`;
-    setTimeout(() => t.classList.remove('show'), 3000);
+  toast.textContent = msg;
+  toast.className = `toast ${type} show`;
+  setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// تشغيل عند التحميل
-renderAll();
+document.addEventListener('DOMContentLoaded', renderAll);

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Adud — Service Provider Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
-   <link rel="stylesheet" href="provider-dashboard..css">
+    <link rel="stylesheet" href="provider-dashboard.css">
 </head>
 <body>
 
@@ -100,10 +100,7 @@
                 <p>Review and accept or reject transport requests</p>
             </div>
         </div>
-
-        <div class="requests-list" id="requests-container">
-            <!-- الطلبات تنعرض هنا من JS -->
-        </div>
+        <div class="requests-list" id="requests-container"></div>
     </div>
 
     <div class="panel">
@@ -113,9 +110,26 @@
                 <p>Update trip status as they progress</p>
             </div>
         </div>
+        <div id="active-trips-container"></div>
+    </div>
 
-        <div id="active-trips-container">
-            <!-- الرحلات النشطة تنعرض هنا من JS -->
+    <div class="panel">
+        <div class="panel-header">
+            <div>
+                <h2>🏥 Guardians / المرافقون</h2>
+                <p>Add guardians and assign them to trips when needed</p>
+            </div>
+        </div>
+
+        <div class="requests-list">
+            <div class="guardian-form">
+                <input id="guardianName" type="text" placeholder="Guardian Name / اسم المرافق">
+                <input id="guardianPhone" type="text" placeholder="Phone / الجوال">
+                <input id="guardianNotes" type="text" placeholder="Notes / ملاحظات">
+                <button class="btn-accept" onclick="addGuardian()">+ Add Guardian</button>
+            </div>
+
+            <div id="guardians-container"></div>
         </div>
     </div>
 </main>
@@ -130,22 +144,18 @@
                 <input type="radio" name="st"/>
                 <label>🟡 Assigned / تم التعيين</label>
             </div>
-
             <div class="status-option" onclick="selectStatus(this,'Picked Up')">
                 <input type="radio" name="st"/>
                 <label>🔵 Picked Up / تم الاستلام</label>
             </div>
-
             <div class="status-option" onclick="selectStatus(this,'Arrived')">
                 <input type="radio" name="st"/>
                 <label>🟢 Arrived / تم الوصول</label>
             </div>
-
             <div class="status-option" onclick="selectStatus(this,'Completed')">
                 <input type="radio" name="st"/>
                 <label>✅ Completed / مكتمل</label>
             </div>
-
             <div class="status-option" onclick="selectStatus(this,'Cancelled')">
                 <input type="radio" name="st"/>
                 <label>❌ Cancelled / ملغي</label>
@@ -161,6 +171,7 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="../app-data.js"></script>
 <script src="provider-dashboard.js"></script>
 </body>
 </html>

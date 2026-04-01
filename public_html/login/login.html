@@ -1,88 +1,103 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Adud — Login</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="login.css" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Adud — Login & Register</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&family=DM+Serif+Display&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="login.css">
 </head>
-
 <body>
-
 <div class="page-wrapper">
+  <aside class="left-panel">
+    <div class="brand">
+      <div class="brand-logo"><img src="../../images/logo.png" alt="ADUD Logo"></div>
+      <div class="brand-name-ar">عضد</div>
+      <div class="brand-name-en">ADUD</div>
+      <p class="brand-tagline">
+        Medical transport platform that connects users with trusted providers
+        <br>
+        منصة تربط المستخدمين بمزودي النقل الطبي
+      </p>
+    </div>
+  </aside>
 
-    <!-- LEFT -->
-    <aside class="left-panel">
-        <div class="brand">
+  <main class="right-panel">
+    <div class="tab-bar">
+      <button class="tab-btn active" data-target="loginSection">Login / دخول</button>
+      <button class="tab-btn" data-target="registerSection">Register / تسجيل</button>
+    </div>
 
-            <div class="brand-logo">
-                <img src="../../images/logo.png" alt="logo">
-            </div>
+    <section class="form-section active" id="loginSection">
+      <h1 class="form-title">Welcome Back / أهلاً بك</h1>
+      <p class="form-subtitle">Sign in as patient or service provider.</p>
 
-            <div class="brand-name-ar">عضد</div>
-            <div class="brand-name-en">ADUD</div>
+      <div class="field">
+        <label>Role / الدور</label>
+        <select id="loginRole">
+          <option value="patient">Patient / Guardian</option>
+          <option value="provider">Service Provider</option>
+        </select>
+      </div>
 
-            <p class="brand-tagline">
-                Medical transport platform that connects users with trusted providers
-                <br>
-                منصة تربط المستخدمين بمزودي النقل الطبي
-            </p>
+      <div class="field">
+        <label>Email / البريد الإلكتروني</label>
+        <input type="email" id="email" placeholder="example@email.com">
+      </div>
 
+      <div class="field">
+        <label>Password / كلمة المرور</label>
+        <input type="password" id="password" placeholder="123456">
+      </div>
+
+      <div id="errorMsg" class="error-msg" style="display:none;"></div>
+
+      <button class="primary-btn" onclick="handleLogin()">Login / دخول</button>
+
+      <div class="form-links">
+        <a href="../index.html">← Home / الرئيسية</a>
+        <a href="#" onclick="fillDemo(event,'patient')">Patient Demo</a>
+        <a href="#" onclick="fillDemo(event,'provider')">Provider Demo</a>
+      </div>
+    </section>
+
+    <section class="form-section" id="registerSection">
+      <h1 class="form-title">Create Account / إنشاء حساب</h1>
+      <p class="form-subtitle">Register as a patient/guardian or service provider.</p>
+
+      <div class="form-row">
+        <div class="field">
+          <label>Full Name / الاسم</label>
+          <input type="text" id="regName">
         </div>
-    </aside>
 
-    <!-- RIGHT -->
-    <main class="right-panel">
+        <div class="field">
+          <label>Role / الدور</label>
+          <select id="regRole">
+            <option value="patient">Patient / Guardian</option>
+            <option value="provider">Service Provider</option>
+          </select>
+        </div>
+      </div>
 
-        <section class="form-section">
+      <div class="field">
+        <label>Email / البريد الإلكتروني</label>
+        <input type="email" id="regEmail">
+      </div>
 
-            <div class="tab-bar">
-                <button class="tab-btn active">Login / دخول</button>
-                <button class="tab-btn" onclick="window.location.href='../index.html'">
-                    Home / الرئيسية
-                </button>
-            </div>
+      <div class="field">
+        <label>Password / كلمة المرور</label>
+        <input type="password" id="regPassword" placeholder="Minimum 6 characters">
+      </div>
 
-            <h1 class="form-title">Welcome Back / أهلاً بك</h1>
+      <div id="registerMsg" class="error-msg" style="display:none;"></div>
 
-            <p class="form-subtitle">
-                Sign in to your account to continue accessing your dashboard and services.
-                <br>
-                سجّل دخولك للمتابعة والوصول إلى الخدمات
-            </p>
-
-            <div class="field">
-                <label>Email / البريد الإلكتروني</label>
-                <input type="email" id="email" placeholder="example@email.com">
-            </div>
-
-            <div class="field">
-                <label>Password / كلمة المرور</label>
-                <input type="password" id="password" placeholder="••••••••">
-            </div>
-
-            <div id="errorMsg" class="error-msg" style="display:none;"></div>
-
-            <button class="primary-btn" onclick="handleLogin()">
-                Login / دخول
-            </button>
-
-            <div class="form-links">
-                <a href="../index.html">← Back to home / العودة للرئيسية</a>
-                <a href="../provider-dashboard/provider-dashboard.html">
-                    Provider Login / دخول المزود
-                </a>
-            </div>
-
-        </section>
-
-    </main>
-
+      <button class="primary-btn" onclick="handleRegister()">Register / تسجيل</button>
+    </section>
+  </main>
 </div>
 
+<script src="../app-data.js"></script>
 <script src="login.js"></script>
-
 </body>
 </html>
