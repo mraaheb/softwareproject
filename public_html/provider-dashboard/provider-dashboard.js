@@ -325,3 +325,5 @@ function showToast(message, type) {
 document.addEventListener('DOMContentLoaded', () => {
   renderAll();
 });
+
+
