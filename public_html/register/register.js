@@ -18,7 +18,7 @@ function register() {
     });
 
     alert("Registered successfully!");
-    window.location.href = "login.html";
+    window.location.href = "../dashboard/dashboard.html";
   } catch (e) {
     alert(e.message || "Registration failed.");
   }
