@@ -73,15 +73,24 @@ function renderRequestsTable() {
   }
 
   tbody.innerHTML = requests.map(r => {
-    let actions = `
-      <button class="act-btn act-view" onclick="viewRequest('${r.id}')">View</button>
-    `;
+    const isCancelled = r.status === 'Cancelled';
+
+    let actions = '';
+
+    if (!isCancelled) {
+      actions += `<button class="act-btn act-view" onclick="viewRequest('${r.id}')">View</button>`;
+    }
+
+    if (!isCancelled) {
+      actions += `<button class="act-btn act-delete" onclick="cancelRequest('${r.id}')">Cancel</button>`;
+    }
 
     if (r.status === 'Requested') {
-      actions += `
-        <button class="act-btn act-edit" onclick="editRequest('${r.id}')">Edit</button>
-        <button class="act-btn act-delete" onclick="cancelRequest('${r.id}')">Cancel</button>
-      `;
+      actions += `<button class="act-btn act-edit" onclick="editRequest('${r.id}')">Edit</button>`;
+    }
+
+    if (isCancelled) {
+      actions = `<span style="color:#c53030; font-size:12px; font-weight:600;">Cancelled / ملغي</span>`;
     }
 
     return `
@@ -117,11 +126,6 @@ function cancelRequest(id) {
 
   if (!request) return;
 
-  if (request.status !== 'Requested') {
-    alert('You can only cancel before provider acceptance / يمكن الإلغاء فقط قبل قبول مزود الخدمة');
-    return;
-  }
-
   const ok = confirm('Cancel this request? / هل تريد إلغاء هذا الطلب؟');
   if (!ok) return;
 
@@ -138,7 +142,7 @@ function cancelRequest(id) {
   request.timeline.push({
     status: 'Cancelled',
     time: now,
-    note: 'Cancelled by patient before provider acceptance'
+    note: 'Cancelled by patient'
   });
 
   saveRequests(requests);

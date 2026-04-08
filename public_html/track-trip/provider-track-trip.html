@@ -134,8 +134,18 @@
                             <div class="main-st">Assigned / تم التعيين</div>
                             <div class="sub-st">Current workflow status</div>
                         </div>
+                        
                     </div>
+                    <div class="actions-section">
+                      <div class="section-title">Update Status</div>
 
+                      <div class="action-buttons">
+                        <button onclick="updateStatus('Picked Up')">Picked Up</button>
+                        <button onclick="updateStatus('Arrived')">Arrived</button>
+                        <button onclick="updateStatus('Completed')">Complete</button>
+                        <button class="danger" onclick="updateStatus('Cancelled')">Cancel</button>
+                      </div>
+                    </div>
                     <div class="mobility-section">
                         <div class="section-title">Mobility Requirements</div>
                         <div class="mobility-tags"></div>

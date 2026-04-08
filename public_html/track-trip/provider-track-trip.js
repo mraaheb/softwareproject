@@ -74,6 +74,67 @@ function getStatusNoteFallback(status) {
   }
 }
 
+function getGuardiansSafe() {
+  return typeof AdudStore.getGuardians === 'function' ? AdudStore.getGuardians() : [];
+}
+
+function ensureDemoProviderTrip(provider) {
+  const requests = AdudStore.getRequests() || [];
+  const providerTrips = requests.filter(r => r.providerId === provider.id);
+
+  if (providerTrips.length) return;
+
+  const guardians = getGuardiansSafe();
+  let guardianId = null;
+
+  if (guardians.length) {
+    guardianId = guardians[0].id;
+  }
+
+  const now = new Date();
+  const iso1 = new Date(now.getTime() - 90 * 60000).toISOString();
+  const iso2 = new Date(now.getTime() - 40 * 60000).toISOString();
+
+  const demoTrip = {
+    id: 'REQ-PROV-DEMO',
+    patientName: 'Sara Al-Qahtani',
+    pickup: 'King Fahad District, Riyadh',
+    dest: 'King Saud Medical City',
+    date: '2026-04-08',
+    time: '09:30',
+    mobility: ['Wheelchair', 'Companion'],
+    notes: 'Patient needs wheelchair support and clinic entrance assistance.',
+    escort: true,
+    guardianId: guardianId,
+    providerId: provider.id,
+    providerName: provider.name || 'Provider',
+    status: 'Picked Up',
+    createdAt: iso1,
+    updatedAt: iso2,
+    cancelledAt: null,
+    timeline: [
+      {
+        status: 'Requested',
+        time: iso1,
+        note: 'Transport request submitted successfully'
+      },
+      {
+        status: 'Assigned',
+        time: new Date(now.getTime() - 70 * 60000).toISOString(),
+        note: 'Trip accepted by provider'
+      },
+      {
+        status: 'Picked Up',
+        time: iso2,
+        note: 'Patient has been picked up'
+      }
+    ]
+  };
+
+  requests.push(demoTrip);
+  AdudStore.saveRequests(requests);
+}
+
 function getProviderTrips(provider) {
   const requests = AdudStore.getRequests() || [];
   return requests.filter(r => r.providerId === provider.id);
@@ -92,6 +153,12 @@ function getRequestFromQuery(provider) {
   ) || requests[0];
 }
 
+function getStatusThemeClass(status) {
+  if (status === 'Completed') return 'completed';
+  if (status === 'Cancelled') return 'cancelled';
+  return 'assigned';
+}
+
 function renderRequestDetails(request) {
   if (!request) return;
 
@@ -104,9 +171,8 @@ function renderRequestDetails(request) {
   if (detailValues[2]) detailValues[2].textContent = request.dest || '—';
   if (detailValues[3]) detailValues[3].textContent = `${request.date || '—'} — ${request.time || '—'}`;
 
-  const guardians = typeof AdudStore.getGuardians === 'function' ? AdudStore.getGuardians() : [];
+  const guardians = getGuardiansSafe();
   const guardian = guardians.find(g => g.id === request.guardianId);
-
   if (detailValues[4]) detailValues[4].textContent = guardian ? guardian.name : 'None';
 
   const currentStatusBox = qs('.status-current');
@@ -126,15 +192,7 @@ function renderRequestDetails(request) {
   }
 
   if (currentStatusBox) {
-    currentStatusBox.className = 'status-current';
-
-    if (request.status === 'Completed') {
-      currentStatusBox.classList.add('completed');
-    } else if (request.status === 'Cancelled') {
-      currentStatusBox.classList.add('cancelled');
-    } else {
-      currentStatusBox.classList.add('assigned');
-    }
+    currentStatusBox.className = `status-current ${getStatusThemeClass(request.status)}`;
   }
 
   const mobilityTags = qs('.mobility-tags');
@@ -151,7 +209,7 @@ function renderRequestDetails(request) {
       escortInfo.innerHTML = `
         <h4>🏥 Guardian Assigned / تم تعيين المرافق</h4>
         <div class="escort-row"><span>Name:</span> ${guardian.name}</div>
-        <div class="escort-row"><span>Phone:</span> ${guardian.phone}</div>
+        <div class="escort-row"><span>Phone:</span> ${guardian.phone || '—'}</div>
         <div class="escort-row"><span>Notes:</span> ${guardian.notes || '—'}</div>
       `;
     } else if (request.escort) {
@@ -166,6 +224,35 @@ function renderRequestDetails(request) {
       `;
     }
   }
+
+  renderExtraSummary(request, guardian);
+}
+
+function renderExtraSummary(request, guardian) {
+  const cardBody = qs('.info-card .card-body');
+  if (!cardBody) return;
+
+  let summaryBox = qs('.provider-extra-summary');
+  if (!summaryBox) {
+    summaryBox = document.createElement('div');
+    summaryBox.className = 'provider-extra-summary';
+    cardBody.appendChild(summaryBox);
+  }
+
+  summaryBox.innerHTML = `
+    <div style="margin-top:16px;padding:14px 16px;border:1.5px solid #dbe7df;border-radius:14px;background:#f8fbf9;">
+      <div style="font-size:11px;font-weight:700;color:#5f6f66;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">
+        Provider Summary / ملخص للمزوّد
+      </div>
+      <div style="font-size:13px;color:#1f2c25;line-height:1.9;">
+        <strong>Patient:</strong> ${request.patientName || '—'}<br>
+        <strong>Current Status:</strong> ${request.status || '—'}<br>
+        <strong>Guardian Assigned:</strong> ${guardian ? guardian.name : 'No'}<br>
+        <strong>Escort Requested:</strong> ${request.escort ? 'Yes' : 'No'}<br>
+        <strong>Notes:</strong> ${request.notes || '—'}
+      </div>
+    </div>
+  `;
 }
 
 function renderTimeline(request) {
@@ -224,6 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!provider) return;
 
   loadProviderUI(provider);
+  ensureDemoProviderTrip(provider);
 
   const request = getRequestFromQuery(provider);
 

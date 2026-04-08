@@ -92,6 +92,18 @@ body {
   margin-top: 2px;
 }
 
+.provider-badge {
+  margin: 16px 16px 6px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
 .nav-section {
   padding: 20px 16px 8px;
 }
@@ -249,7 +261,7 @@ body {
   border-radius: 10px;
   padding: 10px 14px;
   flex: 1;
-  min-width: 200px;
+  min-width: 240px;
 }
 
 .search-box input {
@@ -283,6 +295,10 @@ body {
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
+}
+
+.btn-clear:hover {
+  background: #f1f5f3;
 }
 
 /* Trip Cards */
@@ -426,10 +442,10 @@ body {
 .modal-box {
   background: #fff;
   border-radius: 20px;
-  padding: 32px;
-  max-width: 480px;
-  width: 90%;
-  max-height: 80vh;
+  padding: 28px;
+  max-width: 620px;
+  width: 92%;
+  max-height: 85vh;
   overflow-y: auto;
   box-shadow: 0 20px 50px rgba(31, 44, 37, 0.16);
 }
@@ -438,7 +454,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .modal-header h3 {
@@ -457,10 +473,16 @@ body {
   font-size: 14px;
 }
 
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
 .modal-detail-row {
   display: flex;
   gap: 12px;
-  padding: 10px 0;
+  padding: 12px 0;
   border-bottom: 1px solid #edf2ee;
 }
 
@@ -469,12 +491,58 @@ body {
   color: var(--text-mid);
   font-weight: 700;
   text-transform: uppercase;
-  min-width: 90px;
+  min-width: 110px;
 }
 
 .modal-val {
   font-size: 13px;
   color: var(--text-dark);
+  font-weight: 600;
+  line-height: 1.7;
+}
+
+.timeline-box {
+  margin-top: 16px;
+  padding-top: 8px;
+}
+
+.timeline-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 12px;
+}
+
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.timeline-item {
+  border: 1px solid #edf2ee;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #fcfdfc;
+}
+
+.timeline-status {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 4px;
+}
+
+.timeline-note {
+  font-size: 12px;
+  color: var(--text-mid);
+  margin-bottom: 4px;
+  line-height: 1.6;
+}
+
+.timeline-time {
+  font-size: 11px;
+  color: var(--text-soft);
   font-weight: 600;
 }
 
@@ -531,24 +599,4 @@ body {
     flex-direction: column;
     gap: 4px;
   }
-}
-
-
-
-
-
-
-
-
-
-.provider-badge {
-  margin: 16px 16px 6px;
-  padding: 9px 12px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.12);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  text-align: center;
-  border: 1px solid rgba(255,255,255,0.08);
 }
