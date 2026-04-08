@@ -168,7 +168,7 @@
 
             <div class="field full-field">
                 <label>Additional Notes <span>/ ملاحظات إضافية (اختياري)</span></label>
-                <textarea placeholder="Any additional mobility or medical notes..."></textarea>
+                <textarea id="notes" placeholder="Any additional mobility or medical notes..."></textarea>
             </div>
 
             <div class="section-divider">
@@ -191,7 +191,7 @@
             <button class="btn-cancel-form" onclick="location.href='../dashboard/dashboard.html'">
                 Cancel / إلغاء
             </button>
-            <button class="btn-submit" onclick="submitRequest()">
+            <button class="btn-submit" type="button" onclick="submitRequest()">
                 Submit Request / إرسال الطلب ✓
             </button>
         </div>
@@ -201,16 +201,17 @@
 <div class="modal-overlay" id="successModal">
     <div class="modal-box">
         <div class="modal-icon">✅</div>
-        <div class="modal-title">Request Submitted! / تم إرسال الطلب</div>
-        <p class="modal-sub">
+        <div class="modal-title" id="modalTitle">Request Submitted! / تم إرسال الطلب</div>
+        <p class="modal-sub" id="modalSub">
             Your transport request has been submitted successfully with status <strong>Requested</strong>.
             A service provider will review it shortly.
         </p>
-        <button class="modal-btn" onclick="location.href='../dashboard/dashboard.html'">
+        <button class="modal-btn" onclick="goAfterSave()">
             Go to Dashboard / الرئيسية
         </button>
     </div>
 </div>
+
 <script src="../app-data.js"></script>
 <script src="createReq.js"></script>
 </body>

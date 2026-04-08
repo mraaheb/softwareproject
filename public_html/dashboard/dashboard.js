@@ -19,6 +19,27 @@ function isActive(status) {
   return ['Requested', 'Assigned', 'Picked Up', 'Arrived'].includes(status);
 }
 
+function canModifyRequest(request) {
+  return request && request.status === 'Requested';
+}
+
+function getRestrictionMessage(status) {
+  switch (status) {
+    case 'Assigned':
+      return 'This request has already been accepted by a service provider, so editing and cancellation are no longer available.';
+    case 'Picked Up':
+      return 'This trip is already in progress, so editing and cancellation are no longer available.';
+    case 'Arrived':
+      return 'This trip has already reached the destination, so editing and cancellation are no longer available.';
+    case 'Completed':
+      return 'This trip is already completed, so editing and cancellation are no longer available.';
+    case 'Cancelled':
+      return 'This request has already been cancelled.';
+    default:
+      return 'You can only edit or cancel a request while its status is Requested.';
+  }
+}
+
 function getStatusClass(status) {
   switch (status) {
     case 'Completed':
@@ -34,6 +55,25 @@ function getStatusClass(status) {
     default:
       return 'pill-pending';
   }
+}
+
+function showToast(message, type = 'info') {
+  let toast = document.getElementById('dashboardToast');
+
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'dashboardToast';
+    toast.className = 'dashboard-toast';
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = message;
+  toast.className = `dashboard-toast show ${type}`;
+
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => {
+    toast.className = 'dashboard-toast';
+  }, 3200);
 }
 
 function renderStats() {
@@ -73,24 +113,51 @@ function renderRequestsTable() {
   }
 
   tbody.innerHTML = requests.map(r => {
-    const isCancelled = r.status === 'Cancelled';
+    const canModify = canModifyRequest(r);
+    const restrictionMessage = getRestrictionMessage(r.status);
 
-    let actions = '';
+    let actions = `
+      <button class="act-btn act-view" onclick="viewRequest('${r.id}')">
+        View
+      </button>
+    `;
 
-    if (!isCancelled) {
-      actions += `<button class="act-btn act-view" onclick="viewRequest('${r.id}')">View</button>`;
-    }
-
-    if (!isCancelled) {
-      actions += `<button class="act-btn act-delete" onclick="cancelRequest('${r.id}')">Cancel</button>`;
-    }
-
-    if (r.status === 'Requested') {
-      actions += `<button class="act-btn act-edit" onclick="editRequest('${r.id}')">Edit</button>`;
-    }
-
-    if (isCancelled) {
-      actions = `<span style="color:#c53030; font-size:12px; font-weight:600;">Cancelled / ملغي</span>`;
+    if (r.status === 'Cancelled') {
+      actions += `
+        <button
+          class="act-btn act-disabled"
+          type="button"
+          onclick="showRestriction('${encodeURIComponent(restrictionMessage)}')"
+          title="${restrictionMessage}">
+          Cancelled
+        </button>
+      `;
+    } else if (canModify) {
+      actions += `
+        <button class="act-btn act-edit" onclick="editRequest('${r.id}')">
+          Edit
+        </button>
+        <button class="act-btn act-delete" onclick="cancelRequest('${r.id}')">
+          Cancel
+        </button>
+      `;
+    } else {
+      actions += `
+        <button
+          class="act-btn act-disabled"
+          type="button"
+          onclick="showRestriction('${encodeURIComponent(restrictionMessage)}')"
+          title="${restrictionMessage}">
+          Edit
+        </button>
+        <button
+          class="act-btn act-disabled"
+          type="button"
+          onclick="showRestriction('${encodeURIComponent(restrictionMessage)}')"
+          title="${restrictionMessage}">
+          Cancel
+        </button>
+      `;
     }
 
     return `
@@ -106,10 +173,18 @@ function renderRequestsTable() {
         </td>
         <td>
           <div class="action-btns">${actions}</div>
+          ${!canModify && r.status !== 'Cancelled'
+            ? `<div class="action-hint">Available only while status is Requested</div>`
+            : ''}
         </td>
       </tr>
     `;
   }).join('');
+}
+
+function showRestriction(encodedMessage) {
+  const message = decodeURIComponent(encodedMessage);
+  showToast(message, 'warning');
 }
 
 function viewRequest(id) {
@@ -117,6 +192,18 @@ function viewRequest(id) {
 }
 
 function editRequest(id) {
+  const request = getRequests().find(r => r.id === id);
+
+  if (!request) {
+    showToast('Request not found.', 'warning');
+    return;
+  }
+
+  if (!canModifyRequest(request)) {
+    showToast(getRestrictionMessage(request.status), 'warning');
+    return;
+  }
+
   window.location.href = `../createReq/createReq.html?id=${encodeURIComponent(id)}`;
 }
 
@@ -124,7 +211,15 @@ function cancelRequest(id) {
   const requests = getRequests();
   const request = requests.find(r => r.id === id);
 
-  if (!request) return;
+  if (!request) {
+    showToast('Request not found.', 'warning');
+    return;
+  }
+
+  if (!canModifyRequest(request)) {
+    showToast(getRestrictionMessage(request.status), 'warning');
+    return;
+  }
 
   const ok = confirm('Cancel this request? / هل تريد إلغاء هذا الطلب؟');
   if (!ok) return;
@@ -149,7 +244,7 @@ function cancelRequest(id) {
   renderStats();
   renderRequestsTable();
 
-  alert('Request cancelled successfully / تم إلغاء الطلب بنجاح');
+  showToast('Request cancelled successfully / تم إلغاء الطلب بنجاح', 'success');
 }
 
 document.addEventListener('DOMContentLoaded', () => {

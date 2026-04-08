@@ -545,3 +545,60 @@ td {
     align-items: flex-start;
   }
 }
+.act-disabled {
+  background: #f1f5f3;
+  color: #7b8b83;
+  border: 1px solid #d7e0db;
+  cursor: not-allowed;
+  opacity: 0.95;
+}
+
+.act-disabled:hover {
+  background: #eef3f0;
+  transform: none;
+  box-shadow: none;
+}
+
+.action-hint {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #7b8b83;
+  line-height: 1.4;
+}
+
+.dashboard-toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  min-width: 280px;
+  max-width: 420px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 9999;
+}
+
+.dashboard-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dashboard-toast.info {
+  background: #2f6b4f;
+}
+
+.dashboard-toast.success {
+  background: #2f855a;
+}
+
+.dashboard-toast.warning {
+  background: #b7791f;
+}
